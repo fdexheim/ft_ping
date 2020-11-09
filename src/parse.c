@@ -1,10 +1,10 @@
 
 #include "../inc/ft_ping.h"
 
-static bool		parse_no_arg_flag()
+static bool			parse_no_arg_flag()
 {
-	int			j;
-	bool		was_no_arg_flag;
+	uint32_t		j;
+	bool			was_no_arg_flag;
 
 	j = 1;
 	was_no_arg_flag = false;
@@ -12,6 +12,12 @@ static bool		parse_no_arg_flag()
 	{
 		switch (g_env->argv[g_env->i][j])
 		{
+			case 'h':
+			{
+				g_env->flags.h = true;
+				was_no_arg_flag = true;
+				break;
+			}
 			case 'V':
 			{
 				g_env->flags.V = true;
@@ -37,29 +43,19 @@ static bool		parse_no_arg_flag()
 	}
 	return (was_no_arg_flag);
 }
-
-static void		handle_flag_h()
+/*
+static void			handle_flag_h()
 {
 	
 }
-
-static void		parse_arg_flag()
+*/
+static void			parse_arg_flag()
 {
-	bool		valid_option;
+	bool			valid_option;
 
 	valid_option = true;
-	if (g_env->i == g_env->argc)
-	{
-		printf("ft_ping: option requires an argument -- %c",
-			g_env->argv[g_env->i][1]);
-		usage();
-		exit(EXIT_FAILURE);
-	}
 	switch (g_env->argv[g_env->i][1])
 	{
-		case 'h':
-			handle_flag_h();
-			break;
 		default:
 			valid_option = false;
 			break;
@@ -68,20 +64,22 @@ static void		parse_arg_flag()
 		g_env->i++;
 }
 
-static void		parse_flag()
+static void			parse_flag()
 {
-	printf("parse flag");
-	if (parse_no_arg_flag == false)
+	if (parse_no_arg_flag() == false)
 	{
 		parse_arg_flag();
 	}
 }
 
-void			parse(void)
+void				parse(void)
 {
+printf("Parse loop start, argc = %d\n", g_env->argc);
+
 	g_env->i = 1;
 	while (g_env->i < g_env->argc)
 	{
+		printf("arg : %s\n", g_env->argv[g_env->i]);
 		if (g_env->argv[g_env->i][0] == '-'
 			&& ft_strlen(g_env->argv[g_env->i]) > 1)
 		{
@@ -91,4 +89,9 @@ void			parse(void)
 			g_env->addr = g_env->argv[g_env->i];
 		g_env->i++;
 	}
+	printf("End of Parse, addr = %s\n", g_env->addr);
+	printf("flag v = %d\n", g_env->flags.v);
+	printf("flag V = %d\n", g_env->flags.V);
+	printf("flag h = %d\n", g_env->flags.h);
+	printf("flag ipv6 = %d\n", g_env->flags.ipv6);
 }

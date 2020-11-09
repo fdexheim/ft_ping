@@ -1,9 +1,18 @@
 #include "../inc/ft_ping.h"
 
-static void		usage(void)
+void			usage(void)
 {
 	printf("Usage: ");
 	return ;
+}
+
+static void		close_env()
+{
+	if (g_env != NULL)
+	{
+		free(g_env);
+		g_env = NULL;
+	}
 }
 
 static void		setup_env(int argc, char **argv)
@@ -13,9 +22,9 @@ static void		setup_env(int argc, char **argv)
 		printf("Failed memory allocation\n");
 		exit(EXIT_FAILURE);
 	}
+	ft_bzero(g_env, sizeof(t_env));
 	g_env->argc = argc;
 	g_env->argv = argv;
-	bzero(g_env, sizeof(t_env));
 	return ;
 }
 
@@ -28,4 +37,6 @@ int				main (int argc, char **argv)
 	}
 	setup_env(argc, argv);
 	parse();
+	run();
+	close_env();
 }
