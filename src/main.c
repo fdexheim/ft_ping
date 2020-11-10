@@ -28,7 +28,13 @@ static void		setup_env(int argc, char **argv)
 	return ;
 }
 
-int				main (int argc, char **argv)
+static void		prepare_default_values()
+{
+	if (g_env->run_data.nb_iter == 0)
+		g_env->run_data.nb_iter = 10;
+}
+
+int				main(int argc, char **argv)
 {
 	if (argc <= 1)
 	{
@@ -36,6 +42,7 @@ int				main (int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	}
 	setup_env(argc, argv);
+	prepare_default_values();
 	parse();
 	run();
 	close_env();

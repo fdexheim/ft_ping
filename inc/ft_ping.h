@@ -1,12 +1,14 @@
 #ifndef FT_PING_H
 # define FT_PING_H
 
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <signal.h>
-#include <netdb.h>
-#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/time.h>
 #include "../libft/inc/libft.h"
 
 typedef struct				s_flags
@@ -22,8 +24,8 @@ typedef struct				s_run_data
 	uint32_t				nb_iter;
 	uint32_t				nb_packets_sent;
 	uint32_t				nb_packets_reveived;
-	uint32_t				delay;
-	uint32_t				total_run_time;
+	time_t					delay;
+	time_t					total_run_time;
 }							t_run_data;
 
 typedef struct				s_socket_data
