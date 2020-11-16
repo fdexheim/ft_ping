@@ -1,6 +1,7 @@
 #ifndef FT_PING_H
 # define FT_PING_H
 
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -30,9 +31,9 @@ typedef struct				s_run_data
 
 typedef struct				s_socket_data
 {
-	int						sock;
-	struct protoent			*proto;
-	struct sockaddr_in		sin;
+	int						sockfd;
+	struct in_addr			addr;
+	struct in6_addr			addrv6;
 }							t_socket_data;
 
 typedef struct				s_env
@@ -40,7 +41,7 @@ typedef struct				s_env
 	int						i;
 	int						argc;
 	char					**argv;
-	char					*addr;
+	char					*addr_str;
 	t_flags					flags;
 	t_run_data				run_data;
 	t_socket_data			socket_data;
