@@ -1,33 +1,6 @@
 #include "../inc/ft_ping.h"
 
-static void				exchange()
-{
-//	usleep(1);
-}
-
-static int32_t			setup_socket(char *addr)
-{
-printf(">>set_addr called\n"); 
-	int					ret;
-
-	if (g_env->flags.ipv6 == true)
-		ret = inet_pton(AF_INET6, addr, &g_env->socket_data.addrv6);
-	else
-		ret = inet_pton(AF_INET, addr, &g_env->socket_data.addr);
-	if (ret <= 0)
-	{
-		if (ret == 0)
-			return (0);
-		else
-			printf("invalid af parameter (somehow)\n");
-		exit(EXIT_FAILURE);
-	}
-	//if (env->flags.ipv6 == true)
-	//	g_env->socket_data.sockfd = socket()
-	//
-	return (1);
-}
-
+/*
 static void				debug_addrinfo(struct addrinfo *ptr)
 {
 	printf("ai_flags = %d\n", ptr->ai_flags);
@@ -36,101 +9,106 @@ static void				debug_addrinfo(struct addrinfo *ptr)
 	printf("ai_protocol = %d\n", ptr->ai_protocol);
 	printf("ai_addrlen = %d\n", ptr->ai_addrlen);
 	printf("ai_canonname = %s\n", ptr->ai_canonname);
-//	printf("ai_ = %\n", ptr->ai_);
 }
 
-static int32_t			setup_socket_from_getaddrinfo()
+static void				debug_addrinfo_list(struct addrinfo *start)
 {
-	char				addrstr[100];
+printf(">>debug_addrinfo_list called\n");
+	struct addrinfo		*ptr;
 
-printf(">>set_addr_from_info called\n"); 
+	ptr = start;
+	while (ptr != NULL)
+	{
+		debug_addrinfo(ptr);
+		ptr = ptr->ai_next;
+	}
+}
+*/
+
+static void				exchange()
+{
+	ssize_t				ret;
+
+	g_env->icmp_header_size = g_env->flags.ipv6 == true ? sizeof(struct icmp6hdr) : sizeof(struct icmphdr);
+	g_env->ip_header_size = g_env->flags.ipv6 == true ? sizeof(struct ip6_hdr) : sizeof(struct iphdr);
+	g_env->full_packet_size = g_env->ip_header_size + g_env->icmp_header_size
+		+ g_env->icmp_payload_size ;
+	init_headers(g_env->out_buffer, g_env->out_buffer + g_env->ip_header_size);
+	sendto(g_env->socket_data.sockfd, g_env->out_buffer, g_env->full_packet_size, 0, NULL, 0);
+	ret = recvmsg(g_env->socket_data.sockfd, (struct msghdr *)g_env->in_buffer, 0);
+	if (ret < 0)
+		printf("Bad recvmsg\n");
+}
+
+static void				init_hints(struct addrinfo *hints)
+{
+	ft_bzero(hints, sizeof(struct addrinfo));
+	if (g_env->flags.ipv6 == true)
+		hints->ai_family = AF_INET6;
+	else
+		hints->ai_family = AF_INET;
+	hints->ai_flags = 0;
+	hints->ai_protocol = IPPROTO_ICMP;
+	hints->ai_socktype = SOCK_RAW;
+}
+
+static int32_t			setup_socket()
+{
+	printf(">>setup_socket called\n");
+	char				addrstr[100];
 	struct addrinfo		hints;
 	struct addrinfo		*ptr;
 	struct addrinfo		*start;
 	int					ret;
 
-	ft_bzero(&hints, sizeof(struct addrinfo));
-	if (g_env->flags.ipv6 == true)
-		hints.ai_family = AF_INET6;
-	else
-		hints.ai_family = AF_INET;
-	hints.ai_flags = 0;
-	hints.ai_protocol = 0;
-	if (g_env->flags.ipv6 == true)
-	hints.ai_socktype = SOCK_RAW;
-
+	init_hints(&hints);
 	ret = getaddrinfo(g_env->addr_str, NULL, &hints, &start);
-
 	if (ret != 0)
 	{
 		printf("ping: %s: Could not resolve hostname\n", g_env->addr_str);
 		return (ret);
 	}
-
 	for (ptr = start; ptr != NULL; ptr = ptr->ai_next)
 	{
-		debug_addrinfo(ptr);
-//		if (1)
-//		{
-			ft_bzero(addrstr, 100);
-			inet_ntop(ptr->ai_family, ptr->ai_addr->sa_data, addrstr, 100);
-			g_env->socket_data.sockfd = socket(ptr->ai_family, ptr->ai_socktype,
-				ptr->ai_protocol);
-			printf("addrstr = %s, sockfd = %d\n", addrstr, g_env->socket_data.sockfd);
-			if (g_env->socket_data.sockfd == -1)
-				continue;
-//			if (connect(g_env->socket_data.sockfd, ptr->ai_addr, ptr->ai_addrlen) != -1)
-//			{
-//				printf("CONNECTED to %s !\n", addrstr);
-//				break;
-//			}
-			close(g_env->socket_data.sockfd);
-//		}
+		ft_bzero(addrstr, 100);
+		inet_ntop(ptr->ai_addr->sa_family, ptr->ai_addr->sa_data, addrstr, 100);
+		g_env->socket_data.sockfd = socket(ptr->ai_family, ptr->ai_socktype,
+			IPPROTO_ICMP);
+		if (g_env->socket_data.sockfd == -1)
+		{
+			printf("Bad socket() : %s\n", strerror(errno));
+			printf("Make sure you're running the program with the "
+			"requirered permissions to open a raw socket\n");
+			continue;
+		}
+		if (connect(g_env->socket_data.sockfd, ptr->ai_addr, ptr->ai_addrlen)
+			!= -1)
+		{
+			printf("CONNECTED to %s !\n", addrstr);
+			g_env->socket_data.addr_dest.sin_addr.s_addr =
+				((struct sockaddr_in*)ptr->ai_addr)->sin_addr.s_addr;
+			break;
+		}
+		close(g_env->socket_data.sockfd);
 	}
-
 	freeaddrinfo(start);
-
-	return (1);
-}
-
-static int32_t			setup_connection()
-{
-printf(">>setup_connection called\n"); 
-	int32_t				ret;
-
-	ret = setup_socket(g_env->addr_str);
-	if (ret <= 0)
-		ret = setup_socket_from_getaddrinfo();
-	if (ret < 0)
-		return -1;
-	return 1;
+	return (g_env->socket_data.sockfd);
 }
 
 void					run(void)
 {
-	struct timeval		start_iter;
-	struct timeval		end_iter;
-//	struct timeval		diff;
-
-	if (setup_connection() < 0)
+	if (setup_socket() < 0)
 	{
 		printf("ping: %s: Name or service unknown\n", g_env->addr_str);
 		return ;
 	}
 	signal(SIGINT, sighandle);
 	printf("PING %s (%s) %d(%d) bytes of data.\n",
-		g_env->addr_str, g_env->addr_str, 1, 1);
+			g_env->addr_str, g_env->addr_str, 1, 1);
+
 	for (uint32_t i = 0; i < g_env->run_data.nb_iter; i++)
 	{
-//		printf("loop iter %d\n", i + 1);
-		gettimeofday(&start_iter, NULL);
+		init_headers();
 		exchange();
-		gettimeofday(&end_iter, NULL);
-//		diff.tv_sec = end_iter.tv_sec - start_iter.tv_sec;
-//		diff.tv_usec = end_iter.tv_usec - start_iter.tv_usec;
-//		printf("time start = %ld.%ld | time end = %ld.%ld | diff = %ld.%ld\n",
-//			start_iter.tv_sec, start_iter.tv_usec,
-//			end_iter.tv_sec, end_iter.tv_usec,
-//			diff.tv_sec, diff.tv_usec);
 	}
 }
