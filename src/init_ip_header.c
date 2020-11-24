@@ -17,7 +17,7 @@ static void				init_ipv4_header(void *header_start)
 	hdr->frag_off = 0;
 	hdr->ttl = 255;
 	hdr->protocol = 1;
-	hdr->check = 0; // checksum TBD
+	hdr->check = 0;
 	hdr->saddr = INADDR_ANY;
 	hdr->daddr = g_env->socket_data.addr_dest.sin_addr.s_addr;
 }

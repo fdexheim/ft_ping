@@ -85,8 +85,8 @@ printf("Parse loop start, argc = %d\n", g_env->argc);
 		{
 			parse_flag();
 		}
-		else if (g_env->addr_str == NULL)
-			g_env->addr_str = g_env->argv[g_env->i];
+		else if (g_env->dest == NULL)
+			g_env->dest = g_env->argv[g_env->i];
 		g_env->i++;
 	}
 	printf("End of Parse, addr = %s\n", g_env->addr_str);

@@ -19,7 +19,14 @@
 #include "../libft/inc/libft.h"
 
 #define PACKET_MAX_SIZE 4096
+#define IP_HEADER_SIZE 20
+#define IP_HEADER_SIZE_V6 40
+#define ICMP_HEADER_SIZE 8
+#define ICMP_HEADER_SIZE_V6 8
 #define ICMP_PAYLOAD_SIZE 56
+#define ICMP_PAYLOAD_SIZE_V6 56
+#define FULL_PACKET_SIZE 84
+#define FULL_PACKET_SIZE_V6 104
 
 typedef struct				s_flags
 {
@@ -51,6 +58,7 @@ typedef struct				s_env
 	int						argc;
 	char					**argv;
 	char					*addr_str;
+	char					*dest;
 	t_flags					flags;
 	t_run_data				run_data;
 	t_socket_data			socket_data;
@@ -64,8 +72,16 @@ typedef struct				s_env
 
 t_env						*g_env;
 
+uint16_t					calculate_checksum(void *hdr_start, uint32_t iters);
+void						dump_addrinfo(struct addrinfo *ptr);
+void						dump_addrinfo_list(struct addrinfo *start);
+void						dump_packet(void *packet);
+void						dump_env();
+void						dump_ip(void *ip_start);
+void						dump_icmp(void *icmp_start);
 void						init_headers();
 void						init_icmp_header(void *header_start);
+void						init_icmp_data(void *data_start);
 void						init_ip_header(void *header_start);
 void						run();
 void						usage();

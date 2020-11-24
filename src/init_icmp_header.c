@@ -17,7 +17,11 @@ static void				init_icmp_header_ipv4(void *header_start)
 	hdr->code = 0;
 	hdr->checksum = 0; // TBD
 	hdr->un.echo.id = 42; // TBD
-	hdr->un.echo.sequence = 0; // TBD
+	hdr->un.echo.sequence = 1; // TBD
+	hdr->checksum = 0;
+	hdr->checksum = calculate_checksum(header_start,
+		(g_env->icmp_header_size + g_env->icmp_payload_size) / 2);
+	printf("icmp checksum = %d\n", hdr->checksum);
 }
 
 void					init_icmp_header(void *header_start)

@@ -20,7 +20,9 @@ PATH_LIBFT = ./libft/
 FULL_LIBFT_PATH = $(addprefix $(PATH_LIBFT), $(NAME_LIBFT))
 
 SRC_PATH = ./src/
-SRC_NAME = init_headers.c init_icmp_header.c init_ip_header.c main.c parse.c run.c \
+SRC_NAME = checksum.c dump.c dump_icmp.c dump_ip.c \
+		init_headers.c init_icmp_data.c init_icmp_header.c init_ip_header.c \
+		main.c parse.c run.c \
 		sighandle.c \
 
 OBJ_PATH = ./obj/
