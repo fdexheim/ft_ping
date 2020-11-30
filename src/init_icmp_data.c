@@ -8,4 +8,5 @@ void					init_icmp_data(void *data_start)
 	tv = data_start;
 	if (gettimeofday(tv, NULL) == -1)
 		printf("gettime of day failed");
+	printf("time in init = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
 }

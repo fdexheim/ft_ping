@@ -8,7 +8,6 @@ printf(">>init_headers called\n");
 
 	ip_start = g_env->out_buffer;
 	icmp_start = g_env->out_buffer + g_env->ip_header_size;
-	ft_bzero(ip_start, 4096);
 	init_ip_header(ip_start);
 	init_icmp_header(icmp_start);
 	printf("ip_header_size = %ld\nicmp_header_size = %ld\nicmp_payload size = %ld\nfull packet size = %ld\n", g_env->ip_header_size, g_env->icmp_header_size, g_env->icmp_payload_size, g_env->full_packet_size);

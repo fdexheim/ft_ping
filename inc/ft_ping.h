@@ -73,12 +73,15 @@ typedef struct				s_env
 t_env						*g_env;
 
 uint16_t					calculate_checksum(void *hdr_start, uint32_t iters);
+void						dump_sockaddr(struct sockaddr *ptr);
 void						dump_addrinfo(struct addrinfo *ptr);
 void						dump_addrinfo_list(struct addrinfo *start);
 void						dump_packet(void *packet);
-void						dump_env();
+void						dump_flags(t_flags *flags);
+void						dump_env(t_env *env);
 void						dump_ip(void *ip_start);
 void						dump_icmp(void *icmp_start);
+void						exchange();
 void						init_headers();
 void						init_icmp_header(void *header_start);
 void						init_icmp_data(void *data_start);

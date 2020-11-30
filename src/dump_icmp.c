@@ -13,13 +13,14 @@ static void				dump_icmpv4(void *icmp_start)
 	struct icmphdr		*ptr;
 
 	ptr = icmp_start;
-	printf(" --- ICMP HEADER DUMP ---\n");
+	printf(" === ICMP HEADER DUMP ===\n");
 	printf("type = %d | code = %d | checksum = %d\n", ptr->type, ptr->code, ptr->checksum);
 	printf("id = %d | sequence = %d\n", ptr->un.echo.id, ptr->un.echo.sequence);
 }
 
 static void				dump_icmp_data(void *data_start)
 {
+	printf(" === ICMP DATA DUMP ===\n");
 	struct timeval		*tv;
 
 	tv = data_start;

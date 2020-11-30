@@ -19,22 +19,6 @@ static void					init_size_values()
 
 }
 
-
-static void				exchange()
-{
-	ssize_t				ret;
-
-	dump_packet(g_env->out_buffer);
-	printf("End of dump packet\n");
-	ret = sendto(g_env->socket_data.sockfd, g_env->out_buffer, g_env->full_packet_size, 0, NULL, 0);
-	printf("Sent %ld\n", ret);
-//	ret = recvmsg(g_env->socket_data.sockfd, (struct msghdr *)g_env->in_buffer, 0);
-	ret = read(g_env->socket_data.sockfd, g_env->in_buffer, g_env->full_packet_size);
-	if (ret < 0)
-		printf("Bad recvmsg\n");
-	dump_packet(g_env->out_buffer);
-}
-
 static void				init_hints(struct addrinfo *hints)
 {
 	ft_bzero(hints, sizeof(struct addrinfo));
@@ -55,7 +39,9 @@ static int32_t			setup_socket()
 	struct addrinfo		*ptr;
 	struct addrinfo		*start;
 	int					ret;
+	int					optval;
 
+	optval = 1;
 	init_hints(&hints);
 	ret = getaddrinfo(g_env->dest, NULL, &hints, &start);
 	if (ret != 0)
@@ -63,6 +49,7 @@ static int32_t			setup_socket()
 		printf("ping: %s: Could not resolve hostname\n", g_env->addr_str);
 		return (ret);
 	}
+	dump_addrinfo_list(start);
 	for (ptr = start; ptr != NULL; ptr = ptr->ai_next)
 	{
 		ft_bzero(addrstr, 100);
@@ -71,8 +58,14 @@ static int32_t			setup_socket()
 			IPPROTO_ICMP);
 		if (g_env->socket_data.sockfd == -1)
 		{
-			printf("Bad socket() : %s\n", strerror(errno));
+			printf("Bad socket()\n");
 			continue;
+		}
+		if (setsockopt(g_env->socket_data.sockfd, IPPROTO_IP, IP_HDRINCL,
+			&optval, sizeof(int)) < 0)
+		{
+			printf("Bad setsockopt()\n");
+			exit(EXIT_FAILURE);
 		}
 		if (connect(g_env->socket_data.sockfd, ptr->ai_addr, ptr->ai_addrlen)
 			!= -1)
@@ -85,7 +78,8 @@ static int32_t			setup_socket()
 		}
 		close(g_env->socket_data.sockfd);
 	}
-	freeaddrinfo(start);
+	if (start != NULL)
+		freeaddrinfo(start);
 	return (g_env->socket_data.sockfd);
 }
 
@@ -110,8 +104,10 @@ void					run(void)
 
 	for (uint32_t i = 0; i < g_env->run_data.nb_iter; i++)
 	{
+		ft_bzero(g_env->out_buffer, 4096);
 		init_icmp_data(g_env->out_buffer + g_env->ip_header_size + g_env->icmp_header_size);
 		init_headers();
 		exchange();
 	}
+	sighandle(SIGINT);
 }

@@ -89,9 +89,5 @@ printf("Parse loop start, argc = %d\n", g_env->argc);
 			g_env->dest = g_env->argv[g_env->i];
 		g_env->i++;
 	}
-	printf("End of Parse, addr = %s\n", g_env->addr_str);
-	printf("flag v = %d\n", g_env->flags.v);
-	printf("flag V = %d\n", g_env->flags.V);
-	printf("flag h = %d\n", g_env->flags.h);
-	printf("flag ipv6 = %d\n", g_env->flags.ipv6);
+	dump_flags(&g_env->flags);
 }

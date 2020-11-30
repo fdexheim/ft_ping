@@ -13,7 +13,7 @@ void			dump_ipv4(void *ip_start)
 	struct iphdr		*ptr;
 
 	ptr = ip_start;
-	printf(" --- IPV4 DUMP --- \n");
+	printf(" === IPV4 DUMP === \n");
 	printf("version = %d | ihl = %d | tos = %d | tot_len = %d\n", ptr->version, ptr->ihl, ptr->tos, ptr->tot_len);
 	printf("id = %d | frag_off = %d\n", ptr->id, ptr->frag_off);
 	printf("ttl = %d | protocol = %d, check = %d\n", ptr->ttl, ptr->protocol, ptr->check);
