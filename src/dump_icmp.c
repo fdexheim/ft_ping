@@ -14,7 +14,7 @@ static void				dump_icmpv4(void *icmp_start)
 
 	ptr = icmp_start;
 	printf(" === ICMP HEADER DUMP ===\n");
-	printf("type = %d | code = %d | checksum = %d\n", ptr->type, ptr->code, ptr->checksum);
+	printf("type = %d | code = %d | checksum = %x\n", ptr->type, ptr->code, ptr->checksum);
 	printf("id = %d | sequence = %d\n", ptr->un.echo.id, ptr->un.echo.sequence);
 }
 

@@ -31,25 +31,13 @@ static void				init_hints(struct addrinfo *hints)
 	hints->ai_socktype = SOCK_RAW;
 }
 
-static int32_t			setup_socket()
+static int32_t			browse_addrlist(struct addrinfo *start)
 {
-	printf(">>setup_socket called\n");
-	char				addrstr[100];
-	struct addrinfo		hints;
 	struct addrinfo		*ptr;
-	struct addrinfo		*start;
-	int					ret;
+	char				addrstr[100];
 	int					optval;
 
 	optval = 1;
-	init_hints(&hints);
-	ret = getaddrinfo(g_env->dest, NULL, &hints, &start);
-	if (ret != 0)
-	{
-		printf("ping: %s: Could not resolve hostname\n", g_env->addr_str);
-		return (ret);
-	}
-	dump_addrinfo_list(start);
 	for (ptr = start; ptr != NULL; ptr = ptr->ai_next)
 	{
 		ft_bzero(addrstr, 100);
@@ -78,6 +66,25 @@ static int32_t			setup_socket()
 		}
 		close(g_env->socket_data.sockfd);
 	}
+	return (g_env->socket_data.sockfd);
+}
+
+static int32_t			setup_socket()
+{
+	printf(">>setup_socket called\n");
+	struct addrinfo		hints;
+	struct addrinfo		*start;
+	int					ret;
+
+	init_hints(&hints);
+	ret = getaddrinfo(g_env->dest, NULL, &hints, &start);
+	if (ret != 0)
+	{
+		printf("ping: %s: Could not resolve hostname\n", g_env->addr_str);
+		return (ret);
+	}
+	dump_addrinfo_list(start);
+	browse_addrlist(start);
 	if (start != NULL)
 		freeaddrinfo(start);
 	return (g_env->socket_data.sockfd);
@@ -105,6 +112,7 @@ void					run(void)
 	for (uint32_t i = 0; i < g_env->run_data.nb_iter; i++)
 	{
 		ft_bzero(g_env->out_buffer, 4096);
+		ft_bzero(g_env->in_buffer, 4096);
 		init_icmp_data(g_env->out_buffer + g_env->ip_header_size + g_env->icmp_header_size);
 		init_headers();
 		exchange();

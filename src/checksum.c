@@ -4,10 +4,8 @@ static void			flip_bits(uint16_t *target)
 {
 	uint16_t		mask;
 
-	printf("before flip target = %x\n", *target);
 	mask = 0xffff;
 	*target ^= mask;
-	printf("after flip target = %x\n", *target);
 }
 
 uint16_t			calculate_checksum(void *hdr, uint32_t iters)
@@ -28,8 +26,6 @@ uint16_t			calculate_checksum(void *hdr, uint32_t iters)
 	}
 	carry = (tot & 0xffff0000) >> 16;
 	ret = (tot & 0x0000ffff) + carry;
-	printf("tot = %x | carry = %x | ret = %x\n", tot, carry, ret);
 	flip_bits(&ret);
-	printf("tot = %x | carry = %x | ret = %x\n", tot, carry, ret);
 	return (ret);
 }

@@ -2,7 +2,7 @@
 
 void					dump_flags(t_flags *flags)
 {
-	printf(" === FLAGS DUMP === ");
+	printf(" === FLAGS DUMP ===\n");
 	printf("flag v = %d\n", flags->v);
 	printf("flag V = %d\n", flags->V);
 	printf("flag h = %d\n", flags->h);

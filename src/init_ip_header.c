@@ -20,6 +20,7 @@ static void				init_ipv4_header(void *header_start)
 	hdr->check = 0;
 	hdr->saddr = INADDR_ANY;
 	hdr->daddr = g_env->socket_data.addr_dest.sin_addr.s_addr;
+	hdr->check = calculate_checksum(header_start, 10);
 }
 
 void					init_ip_header(void *header_start)
