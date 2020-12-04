@@ -89,6 +89,7 @@ void						init_ip_header(void *header_start);
 void						run();
 void						usage();
 void						parse();
+int32_t						setup_socket();
 void						sighandle(int sig);
 
 #endif

@@ -23,7 +23,7 @@ SRC_PATH = ./src/
 SRC_NAME = checksum.c dump.c dump_env.c dump_icmp.c dump_ip.c exchange.c \
 		init_headers.c init_icmp_data.c init_icmp_header.c init_ip_header.c \
 		main.c parse.c run.c \
-		sighandle.c \
+		setup_socket.c sighandle.c \
 
 OBJ_PATH = ./obj/
 OBJ_NAME =	$(SRC_NAME:.c=.o)

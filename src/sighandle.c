@@ -2,7 +2,7 @@
 
 static void		recap()
 {
-	
+	printf("RECAP (nyi)\n");
 }
 
 void			sighandle(int sig)
