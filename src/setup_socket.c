@@ -64,7 +64,6 @@ int32_t					setup_socket()
 		printf("ping: %s: Could not resolve hostname\n", g_env->addr_str);
 		return (ret);
 	}
-	dump_addrinfo_list(start);
 	browse_addrlist(start);
 	if (start != NULL)
 		freeaddrinfo(start);

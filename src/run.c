@@ -1,5 +1,27 @@
 #include "../inc/ft_ping.h"
 
+static void					iter_step(int s)
+{
+	(void)s;
+	exchange();
+	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
+		recap();
+	signal(SIGALRM, iter_step);
+	alarm(1);
+}
+
+static void					loop(void)
+{
+	signal(SIGALRM, iter_step);
+	alarm(1);
+	exchange();
+	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
+		recap();
+	while (1) {
+		sleep(1);
+	}
+}
+
 void					run(void)
 {
 	if (getuid() != 0)
@@ -17,14 +39,5 @@ void					run(void)
 	printf("PING %s (%s) %ld(%ld) bytes of data.\n",
 			g_env->dest, g_env->addr_str, g_env->icmp_payload_size,
 			g_env->full_packet_size);
-
-	for (uint32_t i = 0; i < g_env->run_data.nb_iter; i++)
-	{
-		ft_bzero(g_env->out_buffer, 4096);
-		ft_bzero(g_env->in_buffer, 4096);
-		init_icmp_data(g_env->out_buffer + g_env->ip_header_size + g_env->icmp_header_size);
-		init_headers();
-		exchange();
-	}
-	sighandle(SIGINT);
+	loop();
 }

@@ -20,7 +20,6 @@ void					dump_addrinfo(struct addrinfo *ptr)
 
 void					dump_addrinfo_list(struct addrinfo *start)
 {
-printf(">>debug_addrinfo_list called\n");
 	struct addrinfo		*ptr;
 
 	ptr = start;

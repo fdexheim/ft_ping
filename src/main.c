@@ -51,7 +51,7 @@ static void					init_size_values()
 static void		init_default_values()
 {
 	if (g_env->run_data.nb_iter == 0)
-		g_env->run_data.nb_iter = 1;
+		g_env->run_data.nb_iter = 3;
 }
 
 int				main(int argc, char **argv)

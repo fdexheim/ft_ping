@@ -39,8 +39,9 @@ typedef struct				s_flags
 typedef struct				s_run_data
 {
 	uint32_t				nb_iter;
+	uint32_t				current_iter;
 	uint32_t				nb_packets_sent;
-	uint32_t				nb_packets_reveived;
+	uint32_t				nb_packets_received;
 	time_t					delay;
 	time_t					total_run_time;
 }							t_run_data;
@@ -90,6 +91,7 @@ void						run();
 void						usage();
 void						parse();
 int32_t						setup_socket();
+void						recap();
 void						sighandle(int sig);
 
 #endif
