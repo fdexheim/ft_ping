@@ -44,6 +44,13 @@ typedef struct				s_run_data
 	uint32_t				nb_packets_received;
 	time_t					delay;
 	time_t					total_run_time;
+	suseconds_t				min;
+	suseconds_t				avg;
+	suseconds_t				max;
+	suseconds_t				mdev;
+	suseconds_t				sum;
+	struct timeval			time_start;
+	struct timeval			time_end;
 }							t_run_data;
 
 typedef struct				s_socket_data

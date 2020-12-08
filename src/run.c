@@ -14,6 +14,7 @@ static void					loop(void)
 {
 	signal(SIGALRM, iter_step);
 	alarm(1);
+	gettimeofday(&g_env->run_data.time_start, NULL);
 	exchange();
 	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();

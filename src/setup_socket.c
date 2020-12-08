@@ -39,7 +39,6 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 		if (connect(g_env->socket_data.sockfd, ptr->ai_addr, ptr->ai_addrlen)
 			!= -1)
 		{
-			printf("CONNECTED to %s !\n", addrstr);
 			g_env->addr_str = ft_strdup(addrstr);
 			g_env->socket_data.addr_dest.sin_addr.s_addr =
 				((struct sockaddr_in*)ptr->ai_addr)->sin_addr.s_addr;
@@ -52,7 +51,6 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 
 int32_t					setup_socket()
 {
-	printf(">>setup_socket called\n");
 	struct addrinfo		hints;
 	struct addrinfo		*start;
 	int					ret;

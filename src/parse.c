@@ -74,12 +74,9 @@ static void			parse_flag()
 
 void				parse(void)
 {
-printf("Parse loop start, argc = %d\n", g_env->argc);
-
 	g_env->i = 1;
 	while (g_env->i < g_env->argc)
 	{
-		printf("arg : %s\n", g_env->argv[g_env->i]);
 		if (g_env->argv[g_env->i][0] == '-'
 			&& ft_strlen(g_env->argv[g_env->i]) > 1)
 		{
@@ -89,5 +86,4 @@ printf("Parse loop start, argc = %d\n", g_env->argc);
 			g_env->dest = g_env->argv[g_env->i];
 		g_env->i++;
 	}
-	dump_flags(&g_env->flags);
 }
