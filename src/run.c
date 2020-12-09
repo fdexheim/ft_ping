@@ -2,12 +2,12 @@
 
 static void					iter_step(int s)
 {
+	signal(SIGALRM, iter_step);
+	alarm(1);
 	(void)s;
 	exchange();
 	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();
-	signal(SIGALRM, iter_step);
-	alarm(1);
 }
 
 static void					loop(void)

@@ -1,5 +1,12 @@
 #include "../inc/ft_ping.h"
 
+static const char		*icmp4_format =
+"+--------------------------[ ICMP HEADER ]---------------------------+\n"
+"| type %9x | code %9x | checksum %23x |\n"
+"+--------------------------------------------------------------------+\n"
+"| id %28x | sequence %23x |\n"
+"+--------------------------------------------------------------------+\n";
+
 static void				dump_icmpv6(void *icmp_start)
 {
 	struct icmp6_hdr	*ptr;
@@ -13,18 +20,16 @@ static void				dump_icmpv4(void *icmp_start)
 	struct icmphdr		*ptr;
 
 	ptr = icmp_start;
-	printf(" === ICMP HEADER DUMP ===\n");
-	printf("type = %d | code = %d | checksum = %x\n", ptr->type, ptr->code, ptr->checksum);
-	printf("id = %d | sequence = %d\n", ptr->un.echo.id, ptr->un.echo.sequence);
+	printf(icmp4_format, ptr->type, ptr->code, ptr->checksum,
+		ptr->un.echo.id, ptr->un.echo.sequence);
 }
 
 static void				dump_icmp_data(void *data_start)
 {
-	printf(" === ICMP DATA DUMP ===\n");
 	struct timeval		*tv;
 
 	tv = data_start;
-	printf("time = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
+	printf("icmp timestamp data - time = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
 }
 
 void					dump_icmp(void *icmp_start)

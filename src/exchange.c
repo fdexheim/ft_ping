@@ -35,6 +35,7 @@ static void					record_statistics(struct timeval *start,
 	println_status(diff_usec);
 }
 
+/*
 void					dump_brute(void *buff)
 {
 	unsigned char *ptr = buff;
@@ -47,6 +48,7 @@ void					dump_brute(void *buff)
 	}
 	printf("\n");
 }
+*/
 
 static void				give_ping()
 {
@@ -54,6 +56,11 @@ static void				give_ping()
 
 	ret = sendto(g_env->socket_data.sockfd, g_env->out_buffer,
 		g_env->full_packet_size, 0, NULL, 0);
+	if (g_env->flags.v == true && ret > 0)
+	{
+		printf("Sending packet :\n");
+		dump_packet(g_env->out_buffer);
+	}
 	if (ret < 0 && g_env->flags.v == true)
 		printf("[WARNING] sendto() failed\n");
 	g_env->run_data.nb_packets_sent++;
@@ -65,6 +72,11 @@ static void				get_pong()
 
 	ret = read(g_env->socket_data.sockfd, g_env->in_buffer,
 		g_env->full_packet_size);
+	if (g_env->flags.v == true && ret > 0)
+	{
+		printf("Received packet :\n");
+		dump_packet(g_env->in_buffer);
+	}
 	gettimeofday(&g_env->run_data.time_end, NULL);
 	if (ret < 0)
 	{

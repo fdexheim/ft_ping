@@ -1,5 +1,16 @@
 #include "../inc/ft_ping.h"
 
+static const char *ipv4_format = \
+"+--------------------------[ IPV4 HEADER ]---------------------------+\n"
+"| version %6x | ihl %10x | tos %11x | tot_len %6hx |\n"
+"+--------------------------------------------------------------------+\n"
+"| id %28x | frag_off %23x |\n"
+"+--------------------------------------------------------------------+\n"
+"| ttl %10x | protocol %5x | check %26x |\n"
+"+--------------------------------------------------------------------+\n"
+"| saddr %25x | daddr %26x |\n"
+"+--------------------------------------------------------------------+\n";
+
 void			dump_ipv6(void *ip_start)
 {
 	struct ip6_hdr		*ptr;
@@ -13,11 +24,9 @@ void			dump_ipv4(void *ip_start)
 	struct iphdr		*ptr;
 
 	ptr = ip_start;
-	printf(" === IPV4 DUMP === \n");
-	printf("version = %d | ihl = %d | tos = %d | tot_len = %d\n", ptr->version, ptr->ihl, ptr->tos, ptr->tot_len);
-	printf("id = %d | frag_off = %d\n", ptr->id, ptr->frag_off);
-	printf("ttl = %d | protocol = %d, check = %x\n", ptr->ttl, ptr->protocol, ptr->check);
-	printf("saddr = %d | daddr = %d\n", ptr->saddr, ptr->daddr);
+	printf(ipv4_format, ptr->version, ptr->ihl, ptr->tos, ptr->tot_len,
+	ptr->id, ptr->frag_off, ptr->ttl, ptr->protocol, ptr->check, ptr->saddr,
+	ptr->daddr);
 }
 
 void			dump_ip(void *ip_start)

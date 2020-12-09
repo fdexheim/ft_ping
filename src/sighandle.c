@@ -16,6 +16,7 @@ void				recap()
 	printf("%d packets transmitted, %d received, ",
 		g_env->run_data.nb_packets_sent, g_env->run_data.nb_packets_received);
 	printf("%d%% packet loss, time %ld ms\n", packet_ratio, total_span);
+	printf("rtt min/avg/max/mdec = %d/%d/%d/%d ms\n", 42, 42, 42, 42);
 	close(g_env->socket_data.sockfd);
 	exit(EXIT_SUCCESS);
 }

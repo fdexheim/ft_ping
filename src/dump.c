@@ -35,10 +35,8 @@ void					dump_packet(void *packet)
 	void				*ip_start;
 	void				*icmp_start;
 
-	printf("\n");
 	ip_start = packet;
 	icmp_start = packet + g_env->ip_header_size;
 	dump_ip(ip_start);
 	dump_icmp(icmp_start);
-	printf("\n");
 }
