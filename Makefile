@@ -20,10 +20,11 @@ PATH_LIBFT = ./libft/
 FULL_LIBFT_PATH = $(addprefix $(PATH_LIBFT), $(NAME_LIBFT))
 
 SRC_PATH = ./src/
-SRC_NAME = checksum.c dump.c dump_env.c dump_icmp.c dump_ip.c exchange.c \
+SRC_NAME = check_response.c checksum.c dump.c dump_env.c dump_icmp.c \
+		dump_ip.c exchange.c \
 		init_headers.c init_icmp_data.c init_icmp_header.c init_ip_header.c \
 		main.c parse.c run.c \
-		setup_socket.c sighandle.c \
+		setup_socket.c sighandle.c stats.c \
 
 OBJ_PATH = ./obj/
 OBJ_NAME =	$(SRC_NAME:.c=.o)

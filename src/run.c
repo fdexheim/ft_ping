@@ -10,19 +10,6 @@ static void					iter_step(int s)
 		recap();
 }
 
-static void					loop(void)
-{
-	signal(SIGALRM, iter_step);
-	alarm(1);
-	gettimeofday(&g_env->run_data.time_start, NULL);
-	exchange();
-	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
-		recap();
-	while (1) {
-		sleep(1);
-	}
-}
-
 void					run(void)
 {
 	if (getuid() != 0)
@@ -40,5 +27,9 @@ void					run(void)
 	printf("PING %s (%s) %ld(%ld) bytes of data.\n",
 			g_env->dest, g_env->addr_str, g_env->icmp_payload_size,
 			g_env->full_packet_size);
-	loop();
+	gettimeofday(&g_env->run_data.time_start, NULL);
+	iter_step(42);
+	while (1) {
+
+	}
 }

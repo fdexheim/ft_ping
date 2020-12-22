@@ -49,6 +49,7 @@ typedef struct				s_run_data
 	suseconds_t				max;
 	suseconds_t				mdev;
 	suseconds_t				sum;
+	uint32_t				recorded_iters;
 	struct timeval			time_start;
 	struct timeval			time_end;
 }							t_run_data;
@@ -80,6 +81,7 @@ typedef struct				s_env
 
 t_env						*g_env;
 
+void						check_response();
 uint16_t					calculate_checksum(void *hdr_start, uint32_t iters);
 void						dump_sockaddr(struct sockaddr *ptr);
 void						dump_addrinfo(struct addrinfo *ptr);
@@ -100,5 +102,8 @@ void						parse();
 int32_t						setup_socket();
 void						recap();
 void						sighandle(int sig);
+void						record_statistics_success(suseconds_t rtt);
+suseconds_t					get_rtt_sus(struct timeval *start,
+struct timeval *end);
 
 #endif
