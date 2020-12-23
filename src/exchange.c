@@ -33,14 +33,30 @@ static void				give_ping()
 	g_env->run_data.nb_packets_sent++;
 }
 
+static void				init_msghdr(struct msghdr *msg, struct iovec *iov,
+	char *buffer, uint32_t buffer_len)
+{
+	iov->iov_base = g_env->in_buffer;
+	iov->iov_len = g_env->full_packet_size;
+	msg->msg_name = &g_env->socket_data.addr_dest;
+	msg->msg_namelen = sizeof(struct sockaddr_in);
+	msg->msg_iov = iov;
+	msg->msg_iovlen = 1;
+	msg->msg_control = buffer;
+	msg->msg_controllen = buffer_len;
+	msg->msg_flags = 0;
+}
+
 static void				get_pong()
 {
 	ssize_t				ret;
+	struct msghdr		msg;
+	struct iovec		iov;
+	char				buffer[512];
 
-	printf("getting pong\n");
-	ret = read(g_env->socket_data.sockfd, g_env->in_buffer,
-		g_env->full_packet_size);
-	printf("get pong ret = %ld\n", ret);
+	init_msghdr(&msg, &iov, buffer, 512);
+	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
+	printf("buffer s = %s\n", buffer);
 	if (g_env->flags.v == true && ret > 0)
 	{
 		printf("Received packet :\n");

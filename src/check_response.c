@@ -4,9 +4,13 @@ static const char		*get_icmp_type_msg(uint8_t type)
 {
 	const char			*icmp_type_msg[] = {
 		[ICMP_ECHOREPLY] = "Echo Reply",
+		[1] = "Unknown type",
+		[2] = "Unknown type",
 		[ICMP_DEST_UNREACH] = "Destination Unreachable",
 		[ICMP_SOURCE_QUENCH] = "Source Quench",
 		[ICMP_REDIRECT] = "Redirect (change route)",
+		[6] = "Unknown type",
+		[7] = "Unknown type",
 		[ICMP_ECHO] = "Echo Request",
 		[ICMP_TIME_EXCEEDED] = "Time Exceeded",
 		[ICMP_PARAMETERPROB] = "Parameter Problem",
