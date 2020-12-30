@@ -34,11 +34,9 @@ static void				check_icmp(void *icmp_ptr)
 
 	type = ((struct icmphdr *)icmp_ptr)->type;
 	code = ((struct icmphdr *)icmp_ptr)->code;
-//	if (type != 0)
-	{
-		printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
-		printf("icmp code = %d\n", code);
-	}
+
+	printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
+	printf("icmp code = %d\n", code);
 }
 
 static void				check_checksums(void *full_packet)

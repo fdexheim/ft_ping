@@ -5,7 +5,7 @@ static void				init_icmp_header_ipv6(void *header_start)
 	struct icmp6_hdr	*hdr = (struct icmp6_hdr *)header_start;
 
 	(void)hdr;
-//	hdr->type = ICMP_ECHO_REQUEST; // 8 is code for ping request in icmp FOR IPV4 !! is == 128 for ipv6
+//	hdr->type = ICMP_ECHO_REQUEST; // 8 is code for ping request in icmp FOR IPV4 ! is == 128 for ipv6
 	
 }
 
@@ -16,7 +16,7 @@ static void				init_icmp_header_ipv4(void *header_start)
 	hdr->type = ICMP_ECHO; // 8 is code for ping request in icmp FOR IPV4 | 128 for ipv6
 	hdr->code = 0;
 	hdr->un.echo.id = htons(42); // TBD
-	hdr->un.echo.sequence = htons(1); // TBD
+	hdr->un.echo.sequence = htons(g_env->run_data.current_iter); // TBD
 	hdr->checksum = 0;
 	hdr->checksum = calculate_checksum(header_start,
 		(g_env->icmp_header_size + g_env->icmp_payload_size) / 2);

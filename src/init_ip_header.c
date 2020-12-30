@@ -15,7 +15,7 @@ static void				init_ipv4_header(void *header_start)
 	hdr->tot_len = htons(g_env->full_packet_size);
 	hdr->id = 0;
 	hdr->frag_off = 0;
-	hdr->ttl = 115;
+	hdr->ttl = 5;
 	hdr->protocol = 1;
 	hdr->check = 0;
 	hdr->saddr = INADDR_ANY;

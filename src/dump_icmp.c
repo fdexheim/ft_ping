@@ -26,10 +26,19 @@ static void				dump_icmpv4(void *icmp_start)
 
 static void				dump_icmp_data(void *data_start)
 {
-	struct timeval		*tv;
+//	struct timeval		*tv;
 
-	tv = data_start;
-	printf("icmp timestamp data - time = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
+//	tv = data_start;
+	unsigned char *ptr = data_start;
+
+	for (uint32_t i = 0; i < 56; i++)
+	{
+		if (i % 16 == 0)
+			printf("\n");
+		printf("%3hd ", ptr[i]);
+	}
+	printf("\n");
+//	printf("icmp timestamp data - time = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
 }
 
 void					dump_icmp(void *icmp_start)
