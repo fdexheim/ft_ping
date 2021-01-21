@@ -25,13 +25,14 @@ static void				give_ping()
 	printf("sento() ret = %ld\n", ret);
 	if (g_env->flags.v == true)
 	{
-		printf("Sending packet :\n");
 		dump_packet(g_env->out_buffer);
 	}
 	if (ret < 0 && g_env->flags.v == true)
+	{
 		printf("[WARNING] sendto() failed\n");
+		printf("%s\n", strerror(errno));
+	}
 	g_env->run_data.nb_packets_sent++;
-	alarm(1);
 }
 
 static void				init_msghdr(struct msghdr *msg, struct iovec *iov,
@@ -45,7 +46,7 @@ static void				init_msghdr(struct msghdr *msg, struct iovec *iov,
 	msg->msg_iovlen = 1;
 	msg->msg_control = buffer;
 	msg->msg_controllen = buffer_len;
-	msg->msg_flags = 0;
+	msg->msg_flags = MSG_ERRQUEUE;
 }
 
 static void				get_pong()
@@ -58,6 +59,7 @@ static void				get_pong()
 	ft_bzero(buffer, 256);
 	ft_bzero(g_env->in_buffer, 4096);
 	init_msghdr(&msg, &iov, buffer, 256);
+
 	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
 	printf("recvmsg() ret = %ld\n", ret);
 	if (g_env->flags.v == true && ret > 0)

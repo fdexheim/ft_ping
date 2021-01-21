@@ -16,6 +16,7 @@ static void				init_ipv4_header(void *header_start)
 	hdr->id = 0;
 	hdr->frag_off = 0;
 	hdr->ttl = 5;
+//	hdr->ttl = 64;
 	hdr->protocol = 1;
 	hdr->check = 0;
 	hdr->saddr = INADDR_ANY;

@@ -23,7 +23,7 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 	{
 		ft_bzero(addrstr, 100);
 		inet_ntop(ptr->ai_addr->sa_family, ptr->ai_addr->sa_data + 2, addrstr, 99);
-		g_env->socket_data.sockfd = socket(ptr->ai_family, ptr->ai_socktype,
+		g_env->socket_data.sockfd = socket(AF_INET, SOCK_RAW,
 			IPPROTO_ICMP);
 		if (g_env->socket_data.sockfd == -1)
 		{
@@ -36,15 +36,10 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 			printf("Bad setsockopt()\n");
 			exit(EXIT_FAILURE);
 		}
-		if (connect(g_env->socket_data.sockfd, ptr->ai_addr, ptr->ai_addrlen)
-			!= -1)
-		{
-			g_env->addr_str = ft_strdup(addrstr);
-			g_env->socket_data.addr_dest.sin_addr.s_addr =
-				((struct sockaddr_in*)ptr->ai_addr)->sin_addr.s_addr;
-			break;
-		}
-		close(g_env->socket_data.sockfd);
+		g_env->addr_str = ft_strdup(addrstr);
+		g_env->socket_data.addr_dest.sin_addr.s_addr =
+			((struct sockaddr_in*)ptr->ai_addr)->sin_addr.s_addr;
+		break;
 	}
 	return (g_env->socket_data.sockfd);
 }

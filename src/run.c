@@ -5,6 +5,7 @@ static void					iter_step(int s)
 	suseconds_t			rtt;
 	(void)s;
 
+	alarm(1);
 	g_env->run_data.current_iter++;
 	exchange();
 	rtt = get_rtt_sus((struct timeval *)(g_env->out_buffer
