@@ -33,6 +33,7 @@ typedef struct				s_flags
 	bool					v;
 	bool					V;
 	bool					h;
+	bool					t;
 	bool					ipv6;
 }							t_flags;
 
@@ -44,6 +45,7 @@ typedef struct				s_run_data
 	uint32_t				nb_packets_received;
 	time_t					delay;
 	time_t					total_run_time;
+	uint8_t					forced_ttl;
 	suseconds_t				min;
 	suseconds_t				avg;
 	suseconds_t				max;

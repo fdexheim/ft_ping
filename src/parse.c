@@ -49,6 +49,19 @@ static void			handle_flag_h()
 	
 }
 */
+
+static void			handle_flag_t()
+{
+	uint32_t		tmp;
+
+	g_env->flags.t = true;
+		tmp = ft_atoi(g_env->argv[g_env->i + 1]);
+	if (tmp > 255)
+		g_env->run_data.forced_ttl = 255;
+	else
+		g_env->run_data.forced_ttl = tmp;
+}
+
 static void			parse_arg_flag()
 {
 	bool			valid_option;
@@ -56,6 +69,9 @@ static void			parse_arg_flag()
 	valid_option = true;
 	switch (g_env->argv[g_env->i][1])
 	{
+		case 't':
+			handle_flag_t();
+			break;
 		default:
 			valid_option = false;
 			break;

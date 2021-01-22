@@ -5,13 +5,17 @@ static void					iter_step(int s)
 	suseconds_t			rtt;
 	(void)s;
 
-	alarm(1);
-	g_env->run_data.current_iter++;
-	exchange();
-	rtt = get_rtt_sus((struct timeval *)(g_env->out_buffer
-		+ g_env->ip_header_size + g_env->icmp_header_size),
-		&g_env->run_data.time_end);
-	record_statistics_success(rtt);
+//	alarm(1);
+	for (int i = 0; i < 10; i++)
+	{
+		g_env->run_data.current_iter++;
+		exchange();
+		rtt = get_rtt_sus((struct timeval *)(g_env->out_buffer
+			+ g_env->ip_header_size + g_env->icmp_header_size),
+			&g_env->run_data.time_end);
+		record_statistics_success(rtt);
+		sleep(1);
+	}
 	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();
 }
@@ -40,7 +44,7 @@ void					run(void)
 			g_env->full_packet_size);
 	gettimeofday(&g_env->run_data.time_start, NULL);
 	iter_step(42);
-	while (1) {
-
-	}
+//	while (1) {
+//
+//	}
 }

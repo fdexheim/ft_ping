@@ -12,6 +12,8 @@ static const char		*get_icmp_type_msg(uint8_t type)
 		[6] = "Unknown type",
 		[7] = "Unknown type",
 		[ICMP_ECHO] = "Echo Request",
+		[9] = "Unknown type",
+		[10] = "Unknown type",
 		[ICMP_TIME_EXCEEDED] = "Time Exceeded",
 		[ICMP_PARAMETERPROB] = "Parameter Problem",
 		[ICMP_TIMESTAMP] = "Timestamp Request",
@@ -22,7 +24,7 @@ static const char		*get_icmp_type_msg(uint8_t type)
 		[ICMP_ADDRESSREPLY] = "Address Mask Reply",
 	};
 
-	if (type > 18)
+	if (type > NR_ICMP_TYPES)
 		return ("Unknown type");
 	return (icmp_type_msg[type]);
 }
