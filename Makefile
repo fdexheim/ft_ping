@@ -21,7 +21,7 @@ FULL_LIBFT_PATH = $(addprefix $(PATH_LIBFT), $(NAME_LIBFT))
 
 SRC_PATH = ./src/
 SRC_NAME = check_response.c checksum.c dump.c dump_env.c dump_icmp.c \
-		dump_ip.c exchange.c \
+		dump_ip.c give_ping.c get_pong.c \
 		init_headers.c init_icmp_data.c init_icmp_header.c init_ip_header.c \
 		main.c parse.c run.c \
 		setup_socket.c sighandle.c stats.c \

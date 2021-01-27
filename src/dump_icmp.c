@@ -24,28 +24,11 @@ static void				dump_icmpv4(void *icmp_start)
 		ptr->un.echo.id, ptr->un.echo.sequence);
 }
 
-static void				dump_icmp_data(void *data_start)
-{
-//	struct timeval		*tv;
-
-//	tv = data_start;
-	unsigned char *ptr = data_start;
-
-	for (uint32_t i = 0; i < 56; i++)
-	{
-		if (i % 16 == 0)
-			printf("\n");
-		printf("%3hd ", ptr[i]);
-	}
-	printf("\n");
-//	printf("icmp timestamp data - time = %ld.%ld\n", tv->tv_sec, tv->tv_usec);
-}
-
 void					dump_icmp(void *icmp_start)
 {
 	if (g_env->flags.ipv6 == true)
 		dump_icmpv6(icmp_start);
 	else
 		dump_icmpv4(icmp_start);
-	dump_icmp_data(icmp_start + g_env->icmp_header_size);
+	ft_dump_brute(icmp_start + g_env->icmp_header_size, 56);
 }

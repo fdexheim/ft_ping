@@ -36,6 +36,7 @@ char			*ft_get_full_input();
 size_t			ft_get_string_table_size(char **table);
 int				ft_atoi(char *src);
 bool			ft_directory_exists(char *access);
+void			ft_dump_brute(void *data, uint32_t size);
 bool			ft_file_exists(char *access);
 bool			ft_file_or_directory_exists(char *access);
 bool			ft_is_flag(char *arg);

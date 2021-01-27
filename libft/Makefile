@@ -17,7 +17,7 @@ INCLUDES_PATH = ./inc/
 SRC_PATH = ./src/
 SRC_NAME =	argv.c argv2.c ft_atoi.c ft_bzero.c ft_free_string_tab.c ft_get_full_input.c \
 			ft_get_string_table_size.c \
-			ft_directory_exists.c ft_file_exists.c ft_file_or_directory_exists.c \
+			ft_directory_exists.c ft_dump_brute.c ft_file_exists.c ft_file_or_directory_exists.c \
 			ft_is_flag.c ft_is_quote.c ft_isdigit.c ft_itoa_uint64.c \
 			ft_lowercase.c \
 			ft_put_size_t.c ft_put_size_t_hex.c ft_put_unsigned_char_hex.c \

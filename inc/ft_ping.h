@@ -3,12 +3,10 @@
 
 #include <arpa/inet.h>
 #include <errno.h>
-#include <linux/icmp.h>
-#include <linux/icmpv6.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
-#include <netinet/ip6.h>
+#include <netinet/ip_icmp.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -35,6 +33,7 @@ typedef struct				s_flags
 	bool					h;
 	bool					t;
 	bool					ipv6;
+	int32_t					verbose_level;
 }							t_flags;
 
 typedef struct				s_run_data
@@ -93,11 +92,13 @@ void						dump_flags(t_flags *flags);
 void						dump_env(t_env *env);
 void						dump_ip(void *ip_start);
 void						dump_icmp(void *icmp_start);
-void						exchange();
+void						get_pong();
+void						give_ping();
 void						init_headers();
 void						init_icmp_header(void *header_start);
 void						init_icmp_data(void *data_start);
 void						init_ip_header(void *header_start);
+void						iter_step(int sig);
 void						run();
 void						usage();
 void						parse();

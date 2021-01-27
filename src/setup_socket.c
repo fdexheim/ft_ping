@@ -39,6 +39,7 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 		g_env->addr_str = ft_strdup(addrstr);
 		g_env->socket_data.addr_dest.sin_addr.s_addr =
 			((struct sockaddr_in*)ptr->ai_addr)->sin_addr.s_addr;
+		g_env->socket_data.addr_dest.sin_family = AF_INET;
 		break;
 	}
 	return (g_env->socket_data.sockfd);

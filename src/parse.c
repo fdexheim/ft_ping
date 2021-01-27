@@ -27,6 +27,7 @@ static bool			parse_no_arg_flag()
 			case 'v':
 			{
 				g_env->flags.v = true;
+				g_env->flags.verbose_level++;
 				was_no_arg_flag = true;
 				break;
 			}

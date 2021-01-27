@@ -37,8 +37,11 @@ static void				check_icmp(void *icmp_ptr)
 	type = ((struct icmphdr *)icmp_ptr)->type;
 	code = ((struct icmphdr *)icmp_ptr)->code;
 
-	printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
-	printf("icmp code = %d\n", code);
+	if (g_env->flags.verbose_level >= 1)
+	{
+		printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
+		printf("icmp code = %d\n", code);
+	}
 }
 
 static void				check_checksums(void *full_packet)
@@ -57,6 +60,17 @@ static void				check_checksums(void *full_packet)
 
 void		check_response()
 {
+	suseconds_t			rtt;
+
 	check_checksums(g_env->in_buffer);
 	check_icmp(g_env->in_buffer + g_env->ip_header_size);
+	rtt = get_rtt_sus((struct timeval *)(g_env->out_buffer
+		+ g_env->ip_header_size + g_env->icmp_header_size),
+		&g_env->run_data.time_end);
+		record_statistics_success(rtt);
+	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
+		recap();
+//	while (1) {
+//
+//	}
 }

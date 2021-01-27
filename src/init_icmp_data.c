@@ -2,18 +2,15 @@
 
 void					init_icmp_data(void *data_start)
 {
-//	struct timeval		*tv;
-//	unsigned char		*ptr;
+	struct timeval		*tv;
+	unsigned char		*ptr;
 
-	(void)data_start;
-
-//	tv = data_start;
-//	ptr = data_start;
-//	if (gettimeofday(tv, NULL) == -1)
-//		printf("gettime of day failed");
-//	for (int i = 0; i < 10; i++)
-//	{
-//		*ptr = 42;
-//		ptr++;
-//	}
+	ptr = data_start;
+	for (int i = 0; i < FULL_PACKET_SIZE - (IP_HEADER_SIZE + ICMP_HEADER_SIZE); i++)
+	{
+		ptr[i] = 42;
+	}
+	tv = data_start + 4;
+	if (gettimeofday(tv, NULL) == -1)
+		printf("gettime of day failed");
 }

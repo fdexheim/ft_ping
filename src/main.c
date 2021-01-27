@@ -2,7 +2,10 @@
 
 void			usage(void)
 {
-	printf("Usage: ");
+	printf("Usage: ./ft_ping [dest addr]\n");
+	printf("flags :\n");
+	printf("-v       | Verbose mode. add more v's for more verbose\n");
+	printf("-t [ttl] | Set specific ttl value in ip header\n");
 	return ;
 }
 
@@ -63,6 +66,11 @@ int				main(int argc, char **argv)
 	}
 	setup_env(argc, argv);
 	parse();
+	if (g_env->dest == NULL)
+	{
+		usage();
+		exit(EXIT_SUCCESS);
+	}
 	init_default_values();
 	init_size_values();
 	run();
