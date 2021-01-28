@@ -55,6 +55,12 @@ static void			handle_flag_t()
 {
 	uint32_t		tmp;
 
+	if (g_env->i + 1 >= g_env->argc)
+	{
+		printf("Missing parmeter for -t option");
+		usage();
+		exit(EXIT_SUCCESS);
+	}
 	g_env->flags.t = true;
 		tmp = ft_atoi(g_env->argv[g_env->i + 1]);
 	if (tmp > 255)
@@ -65,20 +71,20 @@ static void			handle_flag_t()
 
 static void			parse_arg_flag()
 {
-	bool			valid_option;
+	uint32_t		nb_tokens;
 
-	valid_option = true;
+	nb_tokens = 0;
 	switch (g_env->argv[g_env->i][1])
 	{
 		case 't':
 			handle_flag_t();
+			nb_tokens = 1;
 			break;
 		default:
-			valid_option = false;
+			nb_tokens = 0;
 			break;
 	}
-	if (valid_option == true)
-		g_env->i++;
+	g_env->i += nb_tokens;
 }
 
 static void			parse_flag()

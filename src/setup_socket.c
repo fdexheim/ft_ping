@@ -1,17 +1,5 @@
 #include "../inc/ft_ping.h"
 
-static void				init_hints(struct addrinfo *hints)
-{
-	ft_bzero(hints, sizeof(struct addrinfo));
-	if (g_env->flags.ipv6 == true)
-		hints->ai_family = AF_INET6;
-	else
-		hints->ai_family = AF_INET;
-	hints->ai_flags = 0;
-	hints->ai_protocol = IPPROTO_ICMP;
-	hints->ai_socktype = SOCK_RAW;
-}
-
 static int32_t			browse_addrlist(struct addrinfo *start)
 {
 	struct addrinfo		*ptr;
@@ -47,11 +35,15 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 
 int32_t					setup_socket()
 {
-	struct addrinfo		hints;
-	struct addrinfo		*start;
 	int					ret;
+	struct addrinfo		*start;
+	struct addrinfo		hints = {
+		.ai_family = g_env->flags.ipv6 == true ? AF_INET6 : AF_INET,
+		.ai_flags = 0,
+		.ai_protocol = IPPROTO_ICMP,
+		.ai_socktype = SOCK_RAW
+	};
 
-	init_hints(&hints);
 	ret = getaddrinfo(g_env->dest, NULL, &hints, &start);
 	if (ret != 0)
 	{

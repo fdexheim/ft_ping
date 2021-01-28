@@ -37,6 +37,9 @@ static void				check_icmp(void *icmp_ptr)
 	type = ((struct icmphdr *)icmp_ptr)->type;
 	code = ((struct icmphdr *)icmp_ptr)->code;
 
+	if (type != ICMP_ECHOREPLY)
+		g_env->run_data.nb_packets_errors++;
+
 	if (g_env->flags.verbose_level >= 1)
 	{
 		printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
@@ -70,7 +73,4 @@ void		check_response()
 		record_statistics_success(rtt);
 	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();
-//	while (1) {
-//
-//	}
 }

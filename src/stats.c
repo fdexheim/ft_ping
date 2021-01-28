@@ -2,9 +2,6 @@
 
 static void					println_status(suseconds_t diff_usec)
 {
-	printf("%ld bytes from %s (%s): ",
-		g_env->icmp_header_size + g_env->icmp_payload_size, g_env->dest,
-		g_env->addr_str);
 	printf("icmp_seq=%d ttl=%d ", g_env->run_data.current_iter, 115);
 	printf("time=%ld.%ld ms\n", diff_usec / 1000, (diff_usec % 1000) / 100);
 }

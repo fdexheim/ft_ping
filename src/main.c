@@ -24,7 +24,7 @@ static void		setup_env(int argc, char **argv)
 {
 	if ((g_env = malloc(sizeof(t_env))) == NULL)
 	{
-		printf("Failed memory allocation\n");
+		printf("[ERROR] Failed memory allocation\n");
 		exit(EXIT_FAILURE);
 	}
 	ft_bzero(g_env, sizeof(t_env));

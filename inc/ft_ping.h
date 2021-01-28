@@ -42,6 +42,7 @@ typedef struct				s_run_data
 	uint32_t				current_iter;
 	uint32_t				nb_packets_sent;
 	uint32_t				nb_packets_received;
+	uint32_t				nb_packets_errors;
 	time_t					delay;
 	time_t					total_run_time;
 	uint8_t					forced_ttl;

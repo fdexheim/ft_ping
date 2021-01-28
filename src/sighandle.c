@@ -17,6 +17,8 @@ void				recap()
 	printf("\n--- %s (%s) ping statistics ---\n", g_env->dest, g_env->addr_str);
 	printf("%d packets transmitted, %d received, ",
 		g_env->run_data.nb_packets_sent, g_env->run_data.nb_packets_received);
+	if (g_env->run_data.nb_packets_errors > 0)
+		printf("+%d errors, ", g_env->run_data.nb_packets_errors);
 	printf("%d%% packet loss, time %ldms\n", packet_ratio, total_span);
 	printf("rtt min/avg/max/mdec = %d/%ld.%ld/%d/%d ms\n", 42, avg / 1000, avg % 1000, 42, 42);
 	close(g_env->socket_data.sockfd);
