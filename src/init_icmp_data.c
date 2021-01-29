@@ -2,7 +2,6 @@
 
 void					init_icmp_data(void *data_start)
 {
-	struct timeval		*tv;
 	unsigned char		*ptr;
 
 	ptr = data_start;
@@ -10,7 +9,4 @@ void					init_icmp_data(void *data_start)
 	{
 		ptr[i] = 42;
 	}
-	tv = data_start + 4;
-	if (gettimeofday(tv, NULL) == -1)
-		printf("gettime of day failed");
 }

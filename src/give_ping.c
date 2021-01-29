@@ -5,8 +5,9 @@ void				give_ping()
 	ssize_t				ret;
 
 	ft_bzero(g_env->out_buffer, 4096);
-	init_icmp_data(g_env->out_buffer + g_env->ip_header_size + g_env->icmp_header_size);
 	init_headers(g_env->out_buffer);
+	if (gettimeofday(&g_env->run_data.time_new_iter, NULL) < 0)
+		printf("Bad gettimeofday()");
 	ret = sendto(g_env->socket_data.sockfd, g_env->out_buffer,
 		g_env->full_packet_size, 0,
 		(struct sockaddr *)&g_env->socket_data.addr_dest,

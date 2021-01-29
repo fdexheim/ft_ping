@@ -52,6 +52,8 @@ void					get_pong()
 	ft_bzero(g_env->in_buffer, 4096);
 	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
 	print_origin(&msg.msg_name, msg.msg_namelen, ret);
+	if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
+		printf("bad gettimeofday()");
 	if (g_env->flags.v == true)
 	{
 		printf("recvmsg() ret = %ld\n", ret);
@@ -68,6 +70,5 @@ void					get_pong()
 	}
 	else
 		g_env->run_data.nb_packets_received++;
-	gettimeofday(&g_env->run_data.time_end, NULL);
 	check_response();
 }

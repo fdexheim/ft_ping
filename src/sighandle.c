@@ -7,20 +7,29 @@ void				recap()
 	suseconds_t		total_span;
 	uint64_t		avg;
 
-	avg = g_env->run_data.sum / g_env->run_data.recorded_iters;
-	span_sec = g_env->run_data.time_end.tv_sec
-		- g_env->run_data.time_start.tv_sec;
-	total_span = (span_sec * 1000000 + g_env->run_data.time_end.tv_usec
-		- g_env->run_data.time_start.tv_usec) / 1000;
-	packet_ratio = 100 - 100 * (g_env->run_data.nb_packets_received
-		/ g_env->run_data.nb_packets_sent);
+	if (g_env->run_data.recorded_sucessful_iters == 0)
+		avg = 0;
+	else
+		avg = g_env->run_data.sum / g_env->run_data.recorded_sucessful_iters;
+	span_sec = g_env->run_data.time_end.tv_sec - g_env->run_data.time_start.tv_sec;
+	total_span = (span_sec * 1000000 + g_env->run_data.time_end.tv_usec - g_env->run_data.time_start.tv_usec) / 1000;
+	packet_ratio = 100 - 100 * (g_env->run_data.nb_packets_received / g_env->run_data.nb_packets_sent);
 	printf("\n--- %s (%s) ping statistics ---\n", g_env->dest, g_env->addr_str);
 	printf("%d packets transmitted, %d received, ",
-		g_env->run_data.nb_packets_sent, g_env->run_data.nb_packets_received);
+		g_env->run_data.nb_packets_sent,
+		g_env->run_data.nb_packets_received - g_env->run_data.nb_packets_errors);
 	if (g_env->run_data.nb_packets_errors > 0)
 		printf("+%d errors, ", g_env->run_data.nb_packets_errors);
 	printf("%d%% packet loss, time %ldms\n", packet_ratio, total_span);
-	printf("rtt min/avg/max/mdec = %d/%ld.%ld/%d/%d ms\n", 42, avg / 1000, avg % 1000, 42, 42);
+	if (g_env->run_data.recorded_sucessful_iters > 0)
+	{
+		printf("rtt min/avg/max/mdec = %ld.%ld/%ld.%ld/%ld.%ld/%d ms",
+			g_env->run_data.min / 1000, g_env->run_data.min % 1000,
+			avg / 1000, avg % 1000,
+			g_env->run_data.max / 1000, g_env->run_data.max % 1000,
+			42);
+	}
+	printf("\n");
 	close(g_env->socket_data.sockfd);
 	exit(EXIT_SUCCESS);
 }

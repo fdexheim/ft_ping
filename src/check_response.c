@@ -14,7 +14,7 @@ static const char		*get_icmp_type_msg(uint8_t type)
 		[ICMP_ECHO] = "Echo Request",
 		[9] = "Unknown type",
 		[10] = "Unknown type",
-		[ICMP_TIME_EXCEEDED] = "Time Exceeded",
+		[ICMP_TIME_EXCEEDED] = "Time to live exceeded",
 		[ICMP_PARAMETERPROB] = "Parameter Problem",
 		[ICMP_TIMESTAMP] = "Timestamp Request",
 		[ICMP_TIMESTAMPREPLY] = "Timestamp Reply",
@@ -29,22 +29,21 @@ static const char		*get_icmp_type_msg(uint8_t type)
 	return (icmp_type_msg[type]);
 }
 
-static void				check_icmp(void *icmp_ptr)
+static uint8_t			check_icmp(void *icmp_ptr)
 {
 	uint8_t				type;
 	uint8_t				code;
 
 	type = ((struct icmphdr *)icmp_ptr)->type;
 	code = ((struct icmphdr *)icmp_ptr)->code;
-
 	if (type != ICMP_ECHOREPLY)
 		g_env->run_data.nb_packets_errors++;
-
 	if (g_env->flags.verbose_level >= 1)
 	{
 		printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
 		printf("icmp code = %d\n", code);
 	}
+	return (type);
 }
 
 static void				check_checksums(void *full_packet)
@@ -64,13 +63,24 @@ static void				check_checksums(void *full_packet)
 void		check_response()
 {
 	suseconds_t			rtt;
+	uint8_t				ttl;
+	uint8_t				type;
 
+	rtt = 0;
+	ttl = ((struct iphdr *)g_env->in_buffer)->ttl;
 	check_checksums(g_env->in_buffer);
-	check_icmp(g_env->in_buffer + g_env->ip_header_size);
-	rtt = get_rtt_sus((struct timeval *)(g_env->out_buffer
-		+ g_env->ip_header_size + g_env->icmp_header_size),
-		&g_env->run_data.time_end);
+	type = check_icmp(g_env->in_buffer + g_env->ip_header_size);
+	printf("icmp_seq=%d ", g_env->run_data.current_iter);
+	if (type == ICMP_ECHOREPLY)
+	{
+		rtt = get_rtt_sus(&g_env->run_data.time_new_iter,
+			&g_env->run_data.time_end);
+		printf("ttl=%d time=%ld.%ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 100);
 		record_statistics_success(rtt);
-	if (g_env->run_data.current_iter >= g_env->run_data.nb_iter)
+	}
+	else
+		printf("%s\n", get_icmp_type_msg(type));
+	if (g_env->flags.c == true
+		&& g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();
 }

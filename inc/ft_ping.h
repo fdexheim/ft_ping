@@ -32,6 +32,7 @@ typedef struct				s_flags
 	bool					V;
 	bool					h;
 	bool					t;
+	bool					c;
 	bool					ipv6;
 	int32_t					verbose_level;
 }							t_flags;
@@ -51,9 +52,10 @@ typedef struct				s_run_data
 	suseconds_t				max;
 	suseconds_t				mdev;
 	suseconds_t				sum;
-	uint32_t				recorded_iters;
+	uint32_t				recorded_sucessful_iters;
 	struct timeval			time_start;
 	struct timeval			time_end;
+	struct timeval			time_new_iter;
 }							t_run_data;
 
 typedef struct				s_socket_data
