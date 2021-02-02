@@ -15,7 +15,6 @@ void				give_ping()
 
 	if (g_env->flags.v == true)
 	{
-		printf("sento() ret = %ld\n", ret);
 		if (g_env->flags.verbose_level >= 2)
 		{
 			printf("Sent packet :\n");

@@ -85,6 +85,7 @@ typedef struct				s_env
 
 t_env						*g_env;
 
+uint8_t						check_icmp(void *icmp_ptr);
 void						check_response();
 uint16_t					calculate_checksum(void *hdr_start, uint32_t iters);
 void						dump_sockaddr(struct sockaddr *ptr);
@@ -101,6 +102,7 @@ void						init_headers();
 void						init_icmp_header(void *header_start);
 void						init_icmp_data(void *data_start);
 void						init_ip_header(void *header_start);
+void						close_env();
 void						iter_step(int sig);
 void						run();
 void						usage();

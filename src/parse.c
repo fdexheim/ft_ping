@@ -44,12 +44,6 @@ static bool			parse_no_arg_flag()
 	}
 	return (was_no_arg_flag);
 }
-/*
-static void			handle_flag_h()
-{
-	
-}
-*/
 
 static void			handle_flag_t()
 {
@@ -57,7 +51,7 @@ static void			handle_flag_t()
 
 	if (g_env->i + 1 >= g_env->argc)
 	{
-		printf("Missing argument for -t option");
+		printf("Missing argument for -t option\n");
 		usage();
 		exit(EXIT_SUCCESS);
 	}
@@ -71,19 +65,19 @@ static void			handle_flag_t()
 
 static void			handle_flag_c()
 {
-	uint32_t		tmp;
+	int32_t			tmp;
 
 	if (g_env->i + 1 >= g_env->argc)
 	{
-		printf("Missing argument for -t option");
+		printf("Missing argument for -t option\n");
 		usage();
 		exit(EXIT_SUCCESS);
 	}
 	g_env->flags.c = true;
 	tmp = ft_atoi(g_env->argv[g_env->i + 1]);
-	if (tmp == 0)
+	if (tmp <= 0)
 	{
-		printf("ft_ping: bad number of packets to transmit");
+		printf("ft_ping: bad number of packets to transmit\n");
 		exit(EXIT_SUCCESS);
 	}
 	else

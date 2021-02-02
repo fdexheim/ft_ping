@@ -30,5 +30,4 @@ void					dump_icmp(void *icmp_start)
 		dump_icmpv6(icmp_start);
 	else
 		dump_icmpv4(icmp_start);
-	ft_dump_brute(icmp_start + g_env->icmp_header_size, 56);
 }

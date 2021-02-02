@@ -4,15 +4,19 @@ void			usage(void)
 {
 	printf("Usage: ./ft_ping [dest addr]\n");
 	printf("flags :\n");
-	printf("-v       | Verbose mode. add more v's for more verbose\n");
-	printf("-t [ttl] | Set specific ttl value in ip header\n");
+	printf("-c [count] | Run up to [count] iterations\n");
+	printf("-h         | Help pannel (what you're reading right now)\n");
+	printf("-t [ttl]   | Set specific ttl value in ip header\n");
+	printf("-v         | Verbose mode. add up to 2 v's for more verbose\n");
+	printf("-6         | ipv6 mode. NYI\n");
 	return ;
 }
 
-static void		close_env()
+void			close_env()
 {
 	if (g_env != NULL)
 	{
+		close(g_env->socket_data.sockfd);
 		if (g_env->addr_str != NULL)
 			free(g_env->addr_str);
 		free(g_env);
@@ -51,27 +55,22 @@ static void					init_size_values()
 		+ g_env->icmp_payload_size;
 }
 
-static void		init_default_values()
-{
-	if (g_env->run_data.nb_iter == 0)
-		g_env->run_data.nb_iter = 10;
-}
-
 int				main(int argc, char **argv)
 {
 	if (argc <= 1)
 	{
 		usage();
+		close_env();
 		exit(EXIT_SUCCESS);
 	}
 	setup_env(argc, argv);
 	parse();
-	if (g_env->dest == NULL)
+	if (g_env->dest == NULL || g_env->flags.h == true)
 	{
 		usage();
+		close_env();
 		exit(EXIT_SUCCESS);
 	}
-	init_default_values();
 	init_size_values();
 	run();
 	close_env();

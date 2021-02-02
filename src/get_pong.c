@@ -2,7 +2,9 @@
 
 static void				print_origin(void *src, ssize_t size, ssize_t read_size)
 {
+	(void)src;
 	(void)size;
+	uint8_t				type;
 /*	int					ret;
 	char				addr_str[100];
 	struct addrinfo		*ptr;
@@ -13,11 +15,12 @@ static void				print_origin(void *src, ssize_t size, ssize_t read_size)
 		.ai_socktype = SOCK_RAW
 	};
 */
-	if (((struct sockaddr_in*)src)->sin_addr.s_addr
-		== g_env->socket_data.addr_dest.sin_addr.s_addr)
+
+	type = check_icmp(g_env->in_buffer + g_env->ip_header_size);
+	if (type == ICMP_ECHOREPLY)
 	{
 		printf("%ld bytes from %s (%s): ",
-			read_size, g_env->dest, g_env->addr_str);
+			read_size - g_env->ip_header_size, g_env->dest, g_env->addr_str);
 	}
 	else
 	{
@@ -56,7 +59,6 @@ void					get_pong()
 		printf("bad gettimeofday()");
 	if (g_env->flags.v == true)
 	{
-		printf("recvmsg() ret = %ld\n", ret);
 		if (g_env->flags.verbose_level >= 2)
 		{
 			printf("Reveived packet :\n");

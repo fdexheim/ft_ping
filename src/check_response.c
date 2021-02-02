@@ -29,20 +29,11 @@ static const char		*get_icmp_type_msg(uint8_t type)
 	return (icmp_type_msg[type]);
 }
 
-static uint8_t			check_icmp(void *icmp_ptr)
+uint8_t					check_icmp(void *icmp_ptr)
 {
 	uint8_t				type;
-	uint8_t				code;
 
 	type = ((struct icmphdr *)icmp_ptr)->type;
-	code = ((struct icmphdr *)icmp_ptr)->code;
-	if (type != ICMP_ECHOREPLY)
-		g_env->run_data.nb_packets_errors++;
-	if (g_env->flags.verbose_level >= 1)
-	{
-		printf("icmp type = %d (%s)\n" , type, get_icmp_type_msg(type));
-		printf("icmp code = %d\n", code);
-	}
 	return (type);
 }
 
@@ -79,7 +70,10 @@ void		check_response()
 		record_statistics_success(rtt);
 	}
 	else
+	{
+		g_env->run_data.nb_packets_errors++;
 		printf("%s\n", get_icmp_type_msg(type));
+	}
 	if (g_env->flags.c == true
 		&& g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 		recap();

@@ -20,11 +20,24 @@ PATH_LIBFT = ./libft/
 FULL_LIBFT_PATH = $(addprefix $(PATH_LIBFT), $(NAME_LIBFT))
 
 SRC_PATH = ./src/
-SRC_NAME = check_response.c checksum.c dump.c dump_env.c dump_icmp.c \
-		dump_ip.c give_ping.c get_pong.c \
-		init_headers.c init_icmp_data.c init_icmp_header.c init_ip_header.c \
-		main.c parse.c run.c \
-		setup_socket.c sighandle.c stats.c \
+SRC_NAME = check_response.c \
+			checksum.c \
+			dump/dump.c \
+			dump/dump_env.c \
+			dump/dump_icmp.c \
+			dump/dump_ip.c \
+			give_ping.c \
+			get_pong.c \
+			init_headers.c \
+			init_icmp_data.c \
+			init_icmp_header.c \
+			init_ip_header.c \
+			main.c \
+			parse.c \
+			run.c \
+			setup_socket.c \
+			sighandle.c \
+			stats.c \
 
 OBJ_PATH = ./obj/
 OBJ_NAME =	$(SRC_NAME:.c=.o)
@@ -43,6 +56,7 @@ libft:
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@echo "\033[1;32;m[$@]\033[0m : " | tr -d '\n'
 	@mkdir $(OBJ_PATH) 2> /dev/null || echo "" > /dev/null
+	@mkdir $(OBJ_PATH)/dump 2> /dev/null || echo "" > /dev/null
 	$(CC) $(CC_FLAGS) -I $(INCLUDES_PATH) -o $@ -c $<
 
 $(NAME):	$(OBJ)

@@ -30,13 +30,12 @@ void				recap()
 			42);
 	}
 	printf("\n");
-	close(g_env->socket_data.sockfd);
-	exit(EXIT_SUCCESS);
 }
 
 void			sighandle(int sig)
 {
 	(void)sig;
 	recap();
+	close_env();
 	exit(EXIT_SUCCESS);
 }
