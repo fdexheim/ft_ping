@@ -56,7 +56,7 @@ void					get_pong()
 	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
 	print_origin(&msg.msg_name, msg.msg_namelen, ret);
 	if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
-		printf("bad gettimeofday()");
+		printf("bad gettimeofday()\n");
 	if (g_env->flags.v == true)
 	{
 		if (g_env->flags.verbose_level >= 2)
@@ -70,7 +70,5 @@ void					get_pong()
 		if (g_env->flags.v == true)
 			printf("[WARNING] recvmsg() failed\n");
 	}
-	else
-		g_env->run_data.nb_packets_received++;
 	check_response();
 }

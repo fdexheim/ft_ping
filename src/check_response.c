@@ -64,6 +64,7 @@ void		check_response()
 	printf("icmp_seq=%d ", g_env->run_data.current_iter);
 	if (type == ICMP_ECHOREPLY)
 	{
+		g_env->run_data.nb_packets_received++;
 		rtt = get_rtt_sus(&g_env->run_data.time_new_iter,
 			&g_env->run_data.time_end);
 		printf("ttl=%d time=%ld.%ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 100);
@@ -76,5 +77,5 @@ void		check_response()
 	}
 	if (g_env->flags.c == true
 		&& g_env->run_data.current_iter >= g_env->run_data.nb_iter)
-		recap();
+		sighandle(42);
 }

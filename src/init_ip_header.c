@@ -19,6 +19,7 @@ static void				init_ipv4_header(void *header_start)
 		hdr->ttl = 64;
 	else
 		hdr->ttl = g_env->run_data.forced_ttl;
+//	hdr->ttl = g_env->run_data.current_iter + 5; // TEST CHANGE REMOVE LATER
 	hdr->protocol = 1;
 	hdr->check = 0;
 	hdr->saddr = INADDR_ANY;

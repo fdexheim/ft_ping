@@ -12,7 +12,6 @@ void				give_ping()
 		g_env->full_packet_size, 0,
 		(struct sockaddr *)&g_env->socket_data.addr_dest,
 		sizeof(g_env->socket_data.addr_dest));
-
 	if (g_env->flags.v == true)
 	{
 		if (g_env->flags.verbose_level >= 2)
@@ -28,5 +27,8 @@ void				give_ping()
 	}
 	else
 		g_env->run_data.nb_packets_sent++;
-	alarm(1);
+	if (g_env->flags.c == false
+		|| (g_env->flags.c == true
+			&& g_env->run_data.current_iter < g_env->run_data.nb_iter))
+		alarm(1);
 }
