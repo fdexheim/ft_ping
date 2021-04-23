@@ -23,7 +23,6 @@ SRC_PATH = ./src/
 SRC_NAME = check_response.c \
 			checksum.c \
 			dump/dump.c \
-			dump/dump_env.c \
 			dump/dump_icmp.c \
 			dump/dump_ip.c \
 			dump/dump_msghdr.c \
