@@ -2,13 +2,11 @@
 
 void					record_statistics_success(suseconds_t rtt)
 {
+
 	if (g_env->run_data.recorded_sucessful_iters == 0)
 	{
 		g_env->run_data.min = rtt;
-		g_env->run_data.avg = rtt;
 		g_env->run_data.max = rtt;
-		g_env->run_data.sum = rtt;
-		g_env->run_data.mdev = 0;
 	}
 	else
 	{
@@ -16,8 +14,9 @@ void					record_statistics_success(suseconds_t rtt)
 			g_env->run_data.min = rtt;
 		if (rtt > g_env->run_data.max)
 			g_env->run_data.max = rtt;
-		g_env->run_data.sum += rtt;
 	}
+	g_env->run_data.sum += rtt;
+	g_env->run_data.sum2 += (rtt * rtt);
 	g_env->run_data.recorded_sucessful_iters++;
 }
 

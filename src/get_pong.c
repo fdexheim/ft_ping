@@ -1,20 +1,12 @@
 #include "../inc/ft_ping.h"
 
-static void				print_origin(void *src, ssize_t size, ssize_t read_size)
+static void				print_origin(void *msg_name, size_t msg_namelen, ssize_t read_size)
 {
-	(void)src;
-	(void)size;
 	uint8_t				type;
-/*	int					ret;
+	struct sockaddr_in	*addr = msg_name;
 	char				addr_str[100];
-	struct addrinfo		*ptr;
-	struct addrinfo		hints = {
-		.ai_family = g_env->flags.ipv6 == true ? AF_INET6 : AF_INET,
-		.ai_flags = 0,
-		.ai_protocol = IPPROTO_ICMP,
-		.ai_socktype = SOCK_RAW
-	};
-*/
+
+	(void)msg_namelen;
 
 	type = check_icmp(g_env->in_buffer + g_env->ip_header_size);
 	if (type == ICMP_ECHOREPLY)
@@ -24,18 +16,17 @@ static void				print_origin(void *src, ssize_t size, ssize_t read_size)
 	}
 	else
 	{
-//		ft_bzero(addr_str, 100);
-//		ret = getaddrinfo(, NULL, &hints, &ptr);
-//		inet_ntop(ptr->ai_addr->sa_family, ptr->ai_addr->sa_data + 2,
-//			addr_str, 99);
-		printf("From %s (%s) ", g_env->addr_str, g_env->addr_str);
+		ft_bzero(addr_str, 100);
+		inet_ntop(AF_INET, &addr->sin_addr,
+			addr_str, 99);
+		printf("From %s (%s) ", addr_str, addr_str);
 	}
 }
 
 void					get_pong()
 {
 	ssize_t				ret;
-	char				buffer[256];
+	char				buffer[64];
 	struct sockaddr_in	addr = g_env->socket_data.addr_dest;
 	struct iovec		iov = {
 		.iov_base = g_env->in_buffer,
@@ -47,14 +38,14 @@ void					get_pong()
 		.msg_iov = &iov,
 		.msg_iovlen = 1,
 		.msg_control = buffer,
-		.msg_controllen = 256,
+		.msg_controllen = 64,
 		.msg_flags = MSG_ERRQUEUE
 	};
 
-	ft_bzero(buffer, 256);
+	ft_bzero(buffer, 64);
 	ft_bzero(g_env->in_buffer, 4096);
 	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
-	print_origin(&msg.msg_name, msg.msg_namelen, ret);
+	print_origin(msg.msg_name, msg.msg_namelen, ret);
 	if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
 		printf("bad gettimeofday()\n");
 	if (g_env->flags.v == true)
@@ -63,6 +54,7 @@ void					get_pong()
 		{
 			printf("Reveived packet :\n");
 			dump_packet(g_env->in_buffer);
+			dump_msghdr(&msg);
 		}
 	}
 	if (ret < 0)

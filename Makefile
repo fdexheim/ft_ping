@@ -26,6 +26,7 @@ SRC_NAME = check_response.c \
 			dump/dump_env.c \
 			dump/dump_icmp.c \
 			dump/dump_ip.c \
+			dump/dump_msghdr.c \
 			give_ping.c \
 			get_pong.c \
 			init_headers.c \
@@ -60,7 +61,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDES_PATH) -o $@ -c $<
 
 $(NAME):	$(OBJ)
-	$(CC) $(CC_FLAGS) -o $@ $(OBJ) $(FULL_LIBFT_PATH)
+	$(CC) $(CC_FLAGS) -o $@ $(OBJ) $(FULL_LIBFT_PATH) -lm
 	@echo "\033[1;32;m[Compilation Successful]\033[0m"
 	@echo "\033[1;36;m$(NAME)\033[1;32;m ready to go !\033[0m"
 

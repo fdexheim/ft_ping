@@ -50,8 +50,8 @@ typedef struct				s_run_data
 	suseconds_t				min;
 	suseconds_t				avg;
 	suseconds_t				max;
-	suseconds_t				mdev;
 	suseconds_t				sum;
+	suseconds_t				sum2;
 	uint32_t				recorded_sucessful_iters;
 	struct timeval			time_start;
 	struct timeval			time_end;
@@ -96,6 +96,7 @@ void						dump_flags(t_flags *flags);
 void						dump_env(t_env *env);
 void						dump_ip(void *ip_start);
 void						dump_icmp(void *icmp_start);
+void						dump_msghdr(void *msg);
 void						get_pong();
 void						give_ping();
 void						init_headers();

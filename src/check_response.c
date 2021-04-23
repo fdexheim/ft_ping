@@ -67,7 +67,7 @@ void		check_response()
 		g_env->run_data.nb_packets_received++;
 		rtt = get_rtt_sus(&g_env->run_data.time_new_iter,
 			&g_env->run_data.time_end);
-		printf("ttl=%d time=%ld.%ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 100);
+		printf("ttl=%d time=%ld.%.02ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 10);
 		record_statistics_success(rtt);
 	}
 	else
