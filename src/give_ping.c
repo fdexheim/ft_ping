@@ -27,8 +27,4 @@ void				give_ping()
 	}
 	else
 		g_env->run_data.nb_packets_sent++;
-	if (g_env->flags.c == false
-		|| (g_env->flags.c == true
-			&& g_env->run_data.current_iter < g_env->run_data.nb_iter))
-		alarm(1);
 }

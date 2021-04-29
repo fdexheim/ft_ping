@@ -86,7 +86,7 @@ typedef struct				s_env
 t_env						*g_env;
 
 uint8_t						check_icmp(void *icmp_ptr);
-void						check_response();
+void						check_response(struct msghdr *hdr, ssize_t read_size);
 uint16_t					calculate_checksum(void *hdr_start, uint32_t iters);
 void						dump_sockaddr(struct sockaddr *ptr);
 void						dump_addrinfo(struct addrinfo *ptr);

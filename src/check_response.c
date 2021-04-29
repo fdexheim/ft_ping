@@ -1,5 +1,19 @@
 #include "../inc/ft_ping.h"
 
+static void				check_checksums(void *full_packet)
+{
+	uint16_t			ip_sum;
+	uint16_t			icmp_sum;
+
+	ip_sum = calculate_checksum(full_packet, g_env->ip_header_size / 2);
+	icmp_sum = calculate_checksum(full_packet + g_env->ip_header_size,
+	(g_env->icmp_header_size + g_env->icmp_payload_size) / 2);
+	if (g_env->flags.v == true && (ip_sum != 0 || icmp_sum != 0))
+		printf("[WARNING] some checksums do not match :\n"\
+		"ip checksum   = %x\nicmp checksum = %x\n",
+		ip_sum, icmp_sum);
+}
+
 static const char		*get_icmp_type_msg(uint8_t type)
 {
 	const char			*icmp_type_msg[] = {
@@ -29,53 +43,36 @@ static const char		*get_icmp_type_msg(uint8_t type)
 	return (icmp_type_msg[type]);
 }
 
-uint8_t					check_icmp(void *icmp_ptr)
-{
-	uint8_t				type;
-
-	type = ((struct icmphdr *)icmp_ptr)->type;
-	return (type);
-}
-
-static void				check_checksums(void *full_packet)
-{
-	uint16_t			ip_sum;
-	uint16_t			icmp_sum;
-
-	ip_sum = calculate_checksum(full_packet, g_env->ip_header_size / 2);
-	icmp_sum = calculate_checksum(full_packet + g_env->ip_header_size,
-	(g_env->icmp_header_size + g_env->icmp_payload_size) / 2);
-	if (g_env->flags.v == true && (ip_sum != 0 || icmp_sum != 0))
-		printf("[WARNING] some checksums do not match :\n"\
-		"ip checksum   = %x\nicmp checksum = %x\n",
-		ip_sum, icmp_sum);
-}
-
-void		check_response()
+void		check_response(struct msghdr *hdr, ssize_t read_size)
 {
 	suseconds_t			rtt;
 	uint8_t				ttl;
 	uint8_t				type;
+	struct sockaddr_in	*addr = hdr->msg_name;
+	char				addr_str[100];
 
-	rtt = 0;
-	ttl = ((struct iphdr *)g_env->in_buffer)->ttl;
+	type = ((struct icmphdr *)(g_env->in_buffer + g_env->ip_header_size))->type;
 	check_checksums(g_env->in_buffer);
-	type = check_icmp(g_env->in_buffer + g_env->ip_header_size);
-	printf("icmp_seq=%d ", g_env->run_data.current_iter);
 	if (type == ICMP_ECHOREPLY)
 	{
+		ttl = ((struct iphdr *)g_env->in_buffer)->ttl;
+		rtt = get_rtt_sus(&g_env->run_data.time_new_iter, &g_env->run_data.time_end);
+		printf("%ld bytes from %s (%s): ",
+			read_size - g_env->ip_header_size, g_env->dest, g_env->addr_str);
 		g_env->run_data.nb_packets_received++;
-		rtt = get_rtt_sus(&g_env->run_data.time_new_iter,
-			&g_env->run_data.time_end);
+		printf("icmp_seq=%d ", g_env->run_data.current_iter);
 		printf("ttl=%d time=%ld.%.02ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 10);
 		record_statistics_success(rtt);
 	}
 	else
 	{
+		if (type == ICMP_ECHO)
+			return ;
+		ft_bzero(addr_str, 100);
+		inet_ntop(AF_INET, &addr->sin_addr,
+			addr_str, 99);
+		printf("From %s ", addr_str);
 		g_env->run_data.nb_packets_errors++;
 		printf("%s\n", get_icmp_type_msg(type));
 	}
-	if (g_env->flags.c == true
-		&& g_env->run_data.current_iter >= g_env->run_data.nb_iter)
-		sighandle(42);
 }

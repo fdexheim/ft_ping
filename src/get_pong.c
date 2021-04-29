@@ -1,66 +1,58 @@
 #include "../inc/ft_ping.h"
 
-static void				print_origin(void *msg_name, size_t msg_namelen, ssize_t read_size)
+void					init_msgdr(struct msghdr *msg, struct iovec *iov, struct sockaddr_in *addr, char *buffer)
 {
-	uint8_t				type;
-	struct sockaddr_in	*addr = msg_name;
-	char				addr_str[100];
+	*addr = g_env->socket_data.addr_dest;
 
-	(void)msg_namelen;
+	iov->iov_base = g_env->in_buffer;
+	iov->iov_len = g_env->full_packet_size;
 
-	type = check_icmp(g_env->in_buffer + g_env->ip_header_size);
-	if (type == ICMP_ECHOREPLY)
-	{
-		printf("%ld bytes from %s (%s): ",
-			read_size - g_env->ip_header_size, g_env->dest, g_env->addr_str);
-	}
-	else
-	{
-		ft_bzero(addr_str, 100);
-		inet_ntop(AF_INET, &addr->sin_addr,
-			addr_str, 99);
-		printf("From %s (%s) ", addr_str, addr_str);
-	}
+	msg->msg_name = addr;
+	msg->msg_namelen = sizeof(struct sockaddr_in);
+	msg->msg_iov = iov;
+	msg->msg_iovlen = 1;
+	msg->msg_control = buffer;
+	msg->msg_controllen = 64;
+	msg->msg_flags = MSG_ERRQUEUE;
 }
 
 void					get_pong()
 {
 	ssize_t				ret;
 	char				buffer[64];
-	struct sockaddr_in	addr = g_env->socket_data.addr_dest;
-	struct iovec		iov = {
-		.iov_base = g_env->in_buffer,
-		.iov_len = g_env->full_packet_size
-	};
-	struct msghdr		msg = {
-		.msg_name = &addr,
-		.msg_namelen = sizeof(struct sockaddr_in),
-		.msg_iov = &iov,
-		.msg_iovlen = 1,
-		.msg_control = buffer,
-		.msg_controllen = 64,
-		.msg_flags = MSG_ERRQUEUE
-	};
+	struct sockaddr_in	addr;
+	struct iovec		iov;
+	struct msghdr		msg;
+	uint8_t				type = 42;
 
-	ft_bzero(buffer, 64);
-	ft_bzero(g_env->in_buffer, 4096);
-	ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
-	print_origin(msg.msg_name, msg.msg_namelen, ret);
-	if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
-		printf("bad gettimeofday()\n");
-	if (g_env->flags.v == true)
+	while (type != ICMP_ECHOREPLY && type != ICMP_TIME_EXCEEDED)
 	{
-		if (g_env->flags.verbose_level >= 2)
+		ft_bzero(buffer, 64);
+		ft_bzero(g_env->in_buffer, 4096);
+		init_msgdr(&msg, &iov, &addr, buffer);
+		ret = recvmsg(g_env->socket_data.sockfd, &msg, 0);
+		type = ((struct icmphdr *)(g_env->in_buffer + g_env->ip_header_size))->type;
+		if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
+			printf("bad gettimeofday()\n");
+		if (ret < 0)
 		{
-			printf("Reveived packet :\n");
-			dump_packet(g_env->in_buffer);
-			dump_msghdr(&msg);
+			if (g_env->flags.v == true)
+				printf("[WARNING] recvmsg() failed\n");
 		}
+		else if (g_env->flags.v == true)
+		{
+			if (g_env->flags.verbose_level >= 2)
+			{
+				printf("Reveived packet :\n");
+				dump_packet(g_env->in_buffer);
+				dump_msghdr(&msg);
+			}
+		}
+		check_response(&msg, ret);
 	}
-	if (ret < 0)
+	if (g_env->flags.c == true && g_env->run_data.current_iter >= g_env->run_data.nb_iter)
 	{
-		if (g_env->flags.v == true)
-			printf("[WARNING] recvmsg() failed\n");
+		alarm(0);
+		sighandle(42);
 	}
-	check_response();
 }
