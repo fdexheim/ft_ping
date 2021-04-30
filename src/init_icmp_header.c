@@ -13,8 +13,6 @@ static void				init_icmp_header_ipv4(void *header_start)
 {
 	struct icmphdr		*hdr = (struct icmphdr *)header_start;
 
-	init_icmp_data(header_start + g_env->icmp_header_size);
-
 	hdr->type = ICMP_ECHO;
 	hdr->code = 0;
 	hdr->un.echo.id = htons(42);

@@ -1,6 +1,6 @@
 #include "../inc/ft_ping.h"
 
-void					init_msgdr(struct msghdr *msg, struct iovec *iov, struct sockaddr_in *addr, char *buffer)
+static void				init_msgdr(struct msghdr *msg, struct iovec *iov, struct sockaddr_in *addr, char *buffer)
 {
 	*addr = g_env->socket_data.addr_dest;
 
@@ -45,7 +45,6 @@ void					get_pong()
 			{
 				printf("Reveived packet :\n");
 				dump_packet(g_env->in_buffer);
-				dump_msghdr(&msg);
 			}
 		}
 		check_response(&msg, ret);

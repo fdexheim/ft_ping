@@ -35,7 +35,7 @@ static const char		*get_icmp_type_msg(uint8_t type)
 		[ICMP_INFO_REQUEST] = "Information Request",
 		[ICMP_INFO_REPLY] = "Information Reply",
 		[ICMP_ADDRESS] = "Address Mask Request",
-		[ICMP_ADDRESSREPLY] = "Address Mask Reply",
+		[ICMP_ADDRESSREPLY] = "Address Mask Reply"
 	};
 
 	if (type > NR_ICMP_TYPES)
@@ -43,7 +43,7 @@ static const char		*get_icmp_type_msg(uint8_t type)
 	return (icmp_type_msg[type]);
 }
 
-void		check_response(struct msghdr *hdr, ssize_t read_size)
+void					check_response(struct msghdr *hdr, ssize_t read_size)
 {
 	suseconds_t			rtt;
 	uint8_t				ttl;
@@ -57,10 +57,12 @@ void		check_response(struct msghdr *hdr, ssize_t read_size)
 	{
 		ttl = ((struct iphdr *)g_env->in_buffer)->ttl;
 		rtt = get_rtt_sus(&g_env->run_data.time_new_iter, &g_env->run_data.time_end);
-		printf("%ld bytes from %s (%s): ",
-			read_size - g_env->ip_header_size, g_env->dest, g_env->addr_str);
-		g_env->run_data.nb_packets_received++;
-		printf("icmp_seq=%d ", g_env->run_data.current_iter);
+		printf("%ld bytes from %s", read_size - g_env->ip_header_size, g_env->dest);
+		if (ft_strcmp(g_env->dest, g_env->addr_str))
+			printf(" (%s)", g_env->addr_str);
+
+g_env->run_data.nb_packets_received++;
+		printf(": icmp_seq=%d ", g_env->run_data.current_iter);
 		printf("ttl=%d time=%ld.%.02ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 10);
 		record_statistics_success(rtt);
 	}
