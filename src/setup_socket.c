@@ -5,6 +5,10 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 	struct addrinfo		*ptr;
 	char				addrstr[100];
 	int					optval;
+	struct timeval		timeout = {
+		.tv_sec = 0,
+		.tv_usec = 900000
+	};
 
 	optval = 1;
 	for (ptr = start; ptr != NULL; ptr = ptr->ai_next)
@@ -19,7 +23,9 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 			continue;
 		}
 		if (setsockopt(g_env->socket_data.sockfd, IPPROTO_IP, IP_HDRINCL,
-			&optval, sizeof(int)) < 0)
+				&optval, sizeof(int)) < 0
+			|| setsockopt(g_env->socket_data.sockfd, SOL_SOCKET, SO_RCVTIMEO,
+				&timeout, sizeof(struct timeval)) < 0)
 		{
 			printf("Bad setsockopt()\n");
 			exit(EXIT_FAILURE);

@@ -33,10 +33,11 @@ static void			print_packets_info()
 	printf("%.0f%% packet loss, time %ldms\n", packet_ratio, total_span);
 }
 
-void				recap()
+void				recap(int sig)
 {
 	suseconds_t		avg;
 	suseconds_t		mdev;
+	(void)sig;
 
 	print_packets_info();
 	if (g_env->run_data.recorded_sucessful_iters > 0)
@@ -50,12 +51,7 @@ void				recap()
 			g_env->run_data.max / 1000, g_env->run_data.max % 1000,
 			mdev / 1000, mdev % 1000);
 	}
-}
 
-void			sighandle(int sig)
-{
-	(void)sig;
-	recap();
 	close_env();
 	exit(EXIT_SUCCESS);
 }

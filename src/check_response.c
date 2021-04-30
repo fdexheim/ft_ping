@@ -60,8 +60,7 @@ void					check_response(struct msghdr *hdr, ssize_t read_size)
 		printf("%ld bytes from %s", read_size - g_env->ip_header_size, g_env->dest);
 		if (ft_strcmp(g_env->dest, g_env->addr_str))
 			printf(" (%s)", g_env->addr_str);
-
-g_env->run_data.nb_packets_received++;
+		g_env->run_data.nb_packets_received++;
 		printf(": icmp_seq=%d ", g_env->run_data.current_iter);
 		printf("ttl=%d time=%ld.%.02ld ms\n", ttl, rtt / 1000, (rtt % 1000) / 10);
 		record_statistics_success(rtt);
@@ -71,9 +70,11 @@ g_env->run_data.nb_packets_received++;
 		if (type == ICMP_ECHO)
 			return ;
 		ft_bzero(addr_str, 100);
-		inet_ntop(AF_INET, &addr->sin_addr,
-			addr_str, 99);
+		inet_ntop(AF_INET, &addr->sin_addr, addr_str, 99);
 		printf("From %s ", addr_str);
+		if (ft_strcmp(g_env->dest, g_env->addr_str))
+			printf("(%s)", g_env->addr_str);
+		printf(": icmp_seq=%d ", g_env->run_data.current_iter);
 		g_env->run_data.nb_packets_errors++;
 		printf("%s\n", get_icmp_type_msg(type));
 	}

@@ -110,7 +110,6 @@ void						usage();
 void						parse();
 int32_t						setup_socket();
 void						recap();
-void						sighandle(int sig);
 void						record_statistics_success(suseconds_t rtt);
 suseconds_t					get_rtt_sus(struct timeval *start,
 struct timeval *end);

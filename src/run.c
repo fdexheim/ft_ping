@@ -5,17 +5,19 @@ void					iter_step(int s)
 	(void)s;
 
 	g_env->run_data.current_iter++;
-//	if (g_env->flags.c == false
-//		|| (g_env->flags.c == true
-//			&& g_env->run_data.current_iter < g_env->run_data.nb_iter))
 	alarm(1);
 	give_ping();
 	get_pong();
+	if (g_env->flags.c == true && g_env->run_data.current_iter >= g_env->run_data.nb_iter)
+	{
+		alarm(0);
+		recap(42);
+	}
 }
 
 static void				setup_sigs()
 {
-	if ((signal(SIGINT, sighandle) == SIG_ERR)
+	if ((signal(SIGINT, recap) == SIG_ERR)
 		|| (signal(SIGALRM, iter_step) == SIG_ERR))
 	{
 		printf("Bad signal() setup\n");
@@ -42,7 +44,6 @@ void					run(void)
 	gettimeofday(&g_env->run_data.time_start, NULL);
 	setup_sigs();
 	iter_step(42);
-
 	while (1) {
 
 	}

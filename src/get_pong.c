@@ -13,7 +13,7 @@ static void				init_msgdr(struct msghdr *msg, struct iovec *iov, struct sockaddr
 	msg->msg_iovlen = 1;
 	msg->msg_control = buffer;
 	msg->msg_controllen = 64;
-	msg->msg_flags = MSG_ERRQUEUE;
+	msg->msg_flags = 0;
 }
 
 void					get_pong()
@@ -34,12 +34,7 @@ void					get_pong()
 		type = ((struct icmphdr *)(g_env->in_buffer + g_env->ip_header_size))->type;
 		if (gettimeofday(&g_env->run_data.time_end, NULL) < 0)
 			printf("bad gettimeofday()\n");
-		if (ret < 0)
-		{
-			if (g_env->flags.v == true)
-				printf("[WARNING] recvmsg() failed\n");
-		}
-		else if (g_env->flags.v == true)
+		if (g_env->flags.v == true)
 		{
 			if (g_env->flags.verbose_level >= 2)
 			{
@@ -48,10 +43,11 @@ void					get_pong()
 			}
 		}
 		check_response(&msg, ret);
-	}
-	if (g_env->flags.c == true && g_env->run_data.current_iter >= g_env->run_data.nb_iter)
-	{
-		alarm(0);
-		sighandle(42);
+		if (ret < 0)
+		{
+			if (g_env->flags.v == true)
+				printf("[WARNING] recvmsg() failed or timed out\n");
+			break ;
+		}
 	}
 }
