@@ -1,4 +1,3 @@
-
 #include "../inc/ft_ping.h"
 
 static bool			parse_no_arg_flag()

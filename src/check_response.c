@@ -51,9 +51,6 @@ void					check_response(struct msghdr *hdr, ssize_t read_size)
 	struct sockaddr_in	*addr = hdr->msg_name;
 	char				addr_str[100];
 
-//	printf("dest = %s | addr_str = %s\n", g_env->dest, g_env->addr_str);
-//	dump_msghdr(hdr);
-
 	type = ((struct icmphdr *)(g_env->in_buffer + g_env->ip_header_size))->type;
 	check_checksums(g_env->in_buffer);
 	if (type == ICMP_ECHOREPLY)
