@@ -51,6 +51,9 @@ void					check_response(struct msghdr *hdr, ssize_t read_size)
 	struct sockaddr_in	*addr = hdr->msg_name;
 	char				addr_str[100];
 
+//	printf("dest = %s | addr_str = %s\n", g_env->dest, g_env->addr_str);
+//	dump_msghdr(hdr);
+
 	type = ((struct icmphdr *)(g_env->in_buffer + g_env->ip_header_size))->type;
 	check_checksums(g_env->in_buffer);
 	if (type == ICMP_ECHOREPLY)
@@ -73,8 +76,8 @@ void					check_response(struct msghdr *hdr, ssize_t read_size)
 		inet_ntop(AF_INET, &addr->sin_addr, addr_str, 99);
 		printf("From %s ", addr_str);
 		if (ft_strcmp(g_env->dest, g_env->addr_str))
-			printf("(%s)", g_env->addr_str);
-		printf(": icmp_seq=%d ", g_env->run_data.current_iter);
+			printf("(%s) ", addr_str);
+		printf("icmp_seq=%d ", g_env->run_data.current_iter);
 		g_env->run_data.nb_packets_errors++;
 		printf("%s\n", get_icmp_type_msg(type));
 	}

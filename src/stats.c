@@ -2,7 +2,6 @@
 
 void					record_statistics_success(suseconds_t rtt)
 {
-
 	if (g_env->run_data.recorded_sucessful_iters == 0)
 	{
 		g_env->run_data.min = rtt;
@@ -28,6 +27,5 @@ struct timeval *end)
 
 	diff_sec = end->tv_sec - start->tv_sec;
 	diff_usec = 1000000 * diff_sec + (end->tv_usec - start->tv_usec);
-
 	return (diff_usec);
 }

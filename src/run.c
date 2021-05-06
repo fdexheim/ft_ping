@@ -3,7 +3,6 @@
 void					iter_step(int s)
 {
 	(void)s;
-
 	g_env->run_data.current_iter++;
 	alarm(1);
 	give_ping();
@@ -44,7 +43,8 @@ void					run(void)
 	gettimeofday(&g_env->run_data.time_start, NULL);
 	setup_sigs();
 	iter_step(42);
-	while (1) {
+	while (1)
+	{
 
 	}
 }

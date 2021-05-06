@@ -10,7 +10,7 @@ static void				init_ipv4_header(void *header_start)
 	struct iphdr		*hdr = (struct iphdr *)header_start;
 
 	hdr->version = 4;
-	hdr->ihl = 5; // 5 * 4 bytes
+	hdr->ihl = 5;
 	hdr->tos = 0;
 	hdr->tot_len = htons(g_env->full_packet_size);
 	hdr->id = 0;

@@ -4,13 +4,12 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 {
 	struct addrinfo		*ptr;
 	char				addrstr[100];
-	int					optval;
+	int					optval = 1;
 	struct timeval		timeout = {
 		.tv_sec = 0,
 		.tv_usec = 900000
 	};
 
-	optval = 1;
 	for (ptr = start; ptr != NULL; ptr = ptr->ai_next)
 	{
 		ft_bzero(addrstr, 100);

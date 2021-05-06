@@ -3,10 +3,7 @@
 static void				init_icmp_header_ipv6(void *header_start)
 {
 	struct icmp6_hdr	*hdr = (struct icmp6_hdr *)header_start;
-
 	(void)hdr;
-//	hdr->type = ICMP_ECHO_REQUEST; // 8 is code for ping request in icmp FOR IPV4 ! is == 128 for ipv6
-	
 }
 
 static void				init_icmp_header_ipv4(void *header_start)
