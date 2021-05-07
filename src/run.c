@@ -29,8 +29,6 @@ void					run(void)
 	if (setup_socket() < 0)
 	{
 		printf("ping: %s: Name or service unknown\n", g_env->addr_str);
-		printf("Make sure you're running the program with the "
-			"requirered permissions to open a raw socket\n");
 		return ;
 	}
 	printf("PING %s (%s) %ld(%ld) bytes of data.\n",

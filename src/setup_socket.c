@@ -19,6 +19,8 @@ static int32_t			browse_addrlist(struct addrinfo *start)
 		if (g_env->socket_data.sockfd == -1)
 		{
 			printf("Bad socket()\n");
+			printf("Make sure you're running the program with the "
+				"requirered permissions to open a raw socket\n");
 			continue;
 		}
 		if (setsockopt(g_env->socket_data.sockfd, IPPROTO_IP, IP_HDRINCL,
